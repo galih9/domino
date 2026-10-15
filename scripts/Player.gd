@@ -49,14 +49,14 @@ func get_highest_tile() -> DominoTile:
 			highest = t
 	return highest
 
-func get_playable_tiles(board: DominoBoard) -> Array[DominoTile]:
+func get_playable_tiles(board) -> Array[DominoTile]:
 	var playable: Array[DominoTile] = []
 	for t in hand:
 		if board.can_play(t):
 			playable.append(t)
 	return playable
 
-func has_playable(board: DominoBoard) -> bool:
+func has_playable(board) -> bool:
 	for t in hand:
 		if board.can_play(t):
 			return true

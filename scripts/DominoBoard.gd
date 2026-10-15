@@ -43,6 +43,13 @@ func reset() -> void:
 func is_empty() -> bool:
 	return placed_tiles.is_empty()
 
+func get_open_val(end_name: String) -> int:
+	if end_name == "left":
+		return open_left_val
+	elif end_name == "right":
+		return open_right_val
+	return -1
+
 ## Check if a tile can be played anywhere on the board
 func can_play(tile: DominoTile) -> bool:
 	if is_empty():

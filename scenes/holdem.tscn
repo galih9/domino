@@ -1,0 +1,1385 @@
+[gd_scene format=3 uid="uid://b6a1aetor02m1"]
+
+[ext_resource type="Script" path="res://scripts/HoldemGame.gd" id="1_holdem"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
+bg_color = Color(0.06, 0.08, 0.1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_table"]
+bg_color = Color(0.08, 0.24, 0.16, 1)
+border_width_left = 14
+border_width_top = 14
+border_width_right = 14
+border_width_bottom = 14
+border_color = Color(0.28, 0.16, 0.08, 1)
+corner_radius_top_left = 180
+corner_radius_top_right = 180
+corner_radius_bottom_right = 180
+corner_radius_bottom_left = 180
+shadow_color = Color(0, 0, 0, 0.55)
+shadow_size = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ring"]
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.92, 0.8, 0.38, 0.35)
+corner_radius_top_left = 165
+corner_radius_top_right = 165
+corner_radius_bottom_right = 165
+corner_radius_bottom_left = 165
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slot"]
+bg_color = Color(0, 0, 0, 0.2)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 0.15)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pot"]
+bg_color = Color(0.08, 0.12, 0.16, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.92, 0.8, 0.38, 0.8)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0, 0, 0, 0.4)
+shadow_size = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_player_info"]
+bg_color = Color(0.1, 0.14, 0.18, 0.92)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.92, 0.8, 0.38, 0.5)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bet_badge"]
+bg_color = Color(0.15, 0.2, 0.26, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.92, 0.8, 0.38, 0.9)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_action_badge"]
+bg_color = Color(0.2, 0.26, 0.34, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.7, 0.8, 0.9, 0.8)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dealer"]
+bg_color = Color(0.95, 0.95, 0.95, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.85, 0.15, 0.15, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_primary"]
+bg_color = Color(0.92, 0.8, 0.38, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_primary_hover"]
+bg_color = Color(0.98, 0.88, 0.48, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_danger"]
+bg_color = Color(0.75, 0.22, 0.22, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_danger_hover"]
+bg_color = Color(0.88, 0.28, 0.28, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_secondary"]
+bg_color = Color(0.18, 0.24, 0.32, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.92, 0.8, 0.38, 0.5)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_secondary_hover"]
+bg_color = Color(0.24, 0.32, 0.42, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.92, 0.8, 0.38, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dialog"]
+bg_color = Color(0.1, 0.13, 0.18, 0.98)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.92, 0.8, 0.38, 0.8)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+shadow_color = Color(0, 0, 0, 0.6)
+shadow_size = 14
+
+[node name="HoldemGame" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_holdem")
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bg")
+
+[node name="TableBackground" type="Panel" parent="."]
+custom_minimum_size = Vector2(1140, 560)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -570.0
+offset_top = -295.0
+offset_right = 570.0
+offset_bottom = 265.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_table")
+
+[node name="InnerRing" type="Panel" parent="TableBackground"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 22.0
+offset_top = 22.0
+offset_right = -22.0
+offset_bottom = -22.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ring")
+
+[node name="DeckPosition" type="Control" parent="TableBackground"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -100.0
+offset_right = -280.0
+offset_bottom = -100.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PotContainer" type="PanelContainer" parent="TableBackground"]
+custom_minimum_size = Vector2(220, 44)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -110.0
+offset_top = -120.0
+offset_right = 110.0
+offset_bottom = -76.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pot")
+
+[node name="PotLabel" type="Label" parent="TableBackground/PotContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.84, 0.38, 1)
+theme_override_font_sizes/font_size = 18
+text = "POT: $0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RoundInfoLabel" type="Label" parent="TableBackground"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -140.0
+offset_top = -68.0
+offset_right = 140.0
+offset_bottom = -46.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.8, 0.9, 0.85, 0.8)
+theme_override_font_sizes/font_size = 14
+text = "Pre-Flop"
+horizontal_alignment = 1
+
+[node name="CommunityArea" type="Control" parent="TableBackground"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -242.0
+offset_top = -30.0
+offset_right = 242.0
+offset_bottom = 86.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CardsHBox" type="HBoxContainer" parent="TableBackground/CommunityArea"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="Slot1" type="Panel" parent="TableBackground/CommunityArea/CardsHBox"]
+custom_minimum_size = Vector2(84, 116)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
+
+[node name="Label" type="Label" parent="TableBackground/CommunityArea/CardsHBox/Slot1"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -24.0
+offset_top = -10.0
+offset_right = 24.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.25)
+theme_override_font_sizes/font_size = 11
+text = "FLOP"
+horizontal_alignment = 1
+
+[node name="Slot2" type="Panel" parent="TableBackground/CommunityArea/CardsHBox"]
+custom_minimum_size = Vector2(84, 116)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
+
+[node name="Label" type="Label" parent="TableBackground/CommunityArea/CardsHBox/Slot2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -24.0
+offset_top = -10.0
+offset_right = 24.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.25)
+theme_override_font_sizes/font_size = 11
+text = "FLOP"
+horizontal_alignment = 1
+
+[node name="Slot3" type="Panel" parent="TableBackground/CommunityArea/CardsHBox"]
+custom_minimum_size = Vector2(84, 116)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
+
+[node name="Label" type="Label" parent="TableBackground/CommunityArea/CardsHBox/Slot3"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -24.0
+offset_top = -10.0
+offset_right = 24.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.25)
+theme_override_font_sizes/font_size = 11
+text = "FLOP"
+horizontal_alignment = 1
+
+[node name="Slot4" type="Panel" parent="TableBackground/CommunityArea/CardsHBox"]
+custom_minimum_size = Vector2(84, 116)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
+
+[node name="Label" type="Label" parent="TableBackground/CommunityArea/CardsHBox/Slot4"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -24.0
+offset_top = -10.0
+offset_right = 24.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.25)
+theme_override_font_sizes/font_size = 11
+text = "TURN"
+horizontal_alignment = 1
+
+[node name="Slot5" type="Panel" parent="TableBackground/CommunityArea/CardsHBox"]
+custom_minimum_size = Vector2(84, 116)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
+
+[node name="Label" type="Label" parent="TableBackground/CommunityArea/CardsHBox/Slot5"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -24.0
+offset_top = -10.0
+offset_right = 24.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.25)
+theme_override_font_sizes/font_size = 11
+text = "RIVER"
+horizontal_alignment = 1
+
+[node name="Seats" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="SeatHuman" type="Control" parent="Seats"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -170.0
+offset_top = -215.0
+offset_right = 170.0
+offset_bottom = -25.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="CardsContainer" type="HBoxContainer" parent="Seats/SeatHuman"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -90.0
+offset_top = 0.0
+offset_right = 90.0
+offset_bottom = 116.0
+grow_horizontal = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="SlotLeft" type="Control" parent="Seats/SeatHuman/CardsContainer"]
+custom_minimum_size = Vector2(84, 116)
+layout_mode = 2
+
+[node name="SlotRight" type="Control" parent="Seats/SeatHuman/CardsContainer"]
+custom_minimum_size = Vector2(84, 116)
+layout_mode = 2
+
+[node name="InfoPanel" type="PanelContainer" parent="Seats/SeatHuman"]
+custom_minimum_size = Vector2(170, 50)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -85.0
+offset_top = -68.0
+offset_right = 85.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_player_info")
+
+[node name="VBox" type="VBoxContainer" parent="Seats/SeatHuman/InfoPanel"]
+layout_mode = 2
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="NameLabel" type="Label" parent="Seats/SeatHuman/InfoPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
+theme_override_font_sizes/font_size = 13
+text = "You"
+horizontal_alignment = 1
+
+[node name="ChipsLabel" type="Label" parent="Seats/SeatHuman/InfoPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 1)
+theme_override_font_sizes/font_size = 14
+text = "$1,000"
+horizontal_alignment = 1
+
+[node name="HandDescLabel" type="Label" parent="Seats/SeatHuman"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -120.0
+offset_top = -16.0
+offset_right = 120.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 0.9)
+theme_override_font_sizes/font_size = 12
+text = "Pocket Aces"
+horizontal_alignment = 1
+
+[node name="BetBadge" type="PanelContainer" parent="Seats/SeatHuman"]
+visible = false
+custom_minimum_size = Vector2(80, 24)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -40.0
+offset_top = -32.0
+offset_right = 40.0
+offset_bottom = -8.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bet_badge")
+
+[node name="Label" type="Label" parent="Seats/SeatHuman/BetBadge"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.84, 0.38, 1)
+theme_override_font_sizes/font_size = 12
+text = "$20"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ActionBadge" type="PanelContainer" parent="Seats/SeatHuman"]
+visible = false
+custom_minimum_size = Vector2(90, 24)
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -12.0
+offset_right = 70.0
+offset_bottom = 12.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_action_badge")
+
+[node name="Label" type="Label" parent="Seats/SeatHuman/ActionBadge"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 11
+text = "Check"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DealerBadge" type="Panel" parent="Seats/SeatHuman"]
+visible = false
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 1
+anchors_preset = 0
+offset_left = 60.0
+offset_top = 40.0
+offset_right = 84.0
+offset_bottom = 64.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_dealer")
+
+[node name="Label" type="Label" parent="Seats/SeatHuman/DealerBadge"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.1, 0.1, 0.1, 1)
+theme_override_font_sizes/font_size = 12
+text = "D"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SeatAILeft" type="Control" parent="Seats"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 90.0
+offset_top = -105.0
+offset_right = 290.0
+offset_bottom = 105.0
+grow_vertical = 2
+
+[node name="CardsContainer" type="HBoxContainer" parent="Seats/SeatAILeft"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -90.0
+offset_top = 0.0
+offset_right = 90.0
+offset_bottom = 116.0
+grow_horizontal = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="SlotLeft" type="Control" parent="Seats/SeatAILeft/CardsContainer"]
+custom_minimum_size = Vector2(84, 116)
+layout_mode = 2
+
+[node name="SlotRight" type="Control" parent="Seats/SeatAILeft/CardsContainer"]
+custom_minimum_size = Vector2(84, 116)
+layout_mode = 2
+
+[node name="InfoPanel" type="PanelContainer" parent="Seats/SeatAILeft"]
+custom_minimum_size = Vector2(150, 48)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -75.0
+offset_top = -68.0
+offset_right = 75.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_player_info")
+
+[node name="VBox" type="VBoxContainer" parent="Seats/SeatAILeft/InfoPanel"]
+layout_mode = 2
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="NameLabel" type="Label" parent="Seats/SeatAILeft/InfoPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
+theme_override_font_sizes/font_size = 13
+text = "Alice"
+horizontal_alignment = 1
+
+[node name="ChipsLabel" type="Label" parent="Seats/SeatAILeft/InfoPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 1)
+theme_override_font_sizes/font_size = 14
+text = "$1,000"
+horizontal_alignment = 1
+
+[node name="HandDescLabel" type="Label" parent="Seats/SeatAILeft"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -80.0
+offset_top = -18.0
+offset_right = 80.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 0.9)
+theme_override_font_sizes/font_size = 11
+text = "Two Pair"
+horizontal_alignment = 1
+
+[node name="BetBadge" type="PanelContainer" parent="Seats/SeatAILeft"]
+visible = false
+custom_minimum_size = Vector2(76, 24)
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -10.0
+offset_top = -12.0
+offset_right = 66.0
+offset_bottom = 12.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bet_badge")
+
+[node name="Label" type="Label" parent="Seats/SeatAILeft/BetBadge"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.84, 0.38, 1)
+theme_override_font_sizes/font_size = 12
+text = "$20"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ActionBadge" type="PanelContainer" parent="Seats/SeatAILeft"]
+visible = false
+custom_minimum_size = Vector2(80, 24)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -40.0
+offset_top = -28.0
+offset_right = 40.0
+offset_bottom = -4.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_action_badge")
+
+[node name="Label" type="Label" parent="Seats/SeatAILeft/ActionBadge"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 11
+text = "Call $20"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DealerBadge" type="Panel" parent="Seats/SeatAILeft"]
+visible = false
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -30.0
+offset_top = 10.0
+offset_right = -6.0
+offset_bottom = 34.0
+grow_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_dealer")
+
+[node name="Label" type="Label" parent="Seats/SeatAILeft/DealerBadge"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.1, 0.1, 0.1, 1)
+theme_override_font_sizes/font_size = 12
+text = "D"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SeatAITop" type="Control" parent="Seats"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -100.0
+offset_top = 70.0
+offset_right = 100.0
+offset_bottom = 270.0
+grow_horizontal = 2
+
+[node name="CardsContainer" type="HBoxContainer" parent="Seats/SeatAITop"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -90.0
+offset_top = 0.0
+offset_right = 90.0
+offset_bottom = 116.0
+grow_horizontal = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="SlotLeft" type="Control" parent="Seats/SeatAITop/CardsContainer"]
+custom_minimum_size = Vector2(84, 116)
+layout_mode = 2
+
+[node name="SlotRight" type="Control" parent="Seats/SeatAITop/CardsContainer"]
+custom_minimum_size = Vector2(84, 116)
+layout_mode = 2
+
+[node name="InfoPanel" type="PanelContainer" parent="Seats/SeatAITop"]
+custom_minimum_size = Vector2(150, 48)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -75.0
+offset_top = -68.0
+offset_right = 75.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_player_info")
+
+[node name="VBox" type="VBoxContainer" parent="Seats/SeatAITop/InfoPanel"]
+layout_mode = 2
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="NameLabel" type="Label" parent="Seats/SeatAITop/InfoPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
+theme_override_font_sizes/font_size = 13
+text = "Bob"
+horizontal_alignment = 1
+
+[node name="ChipsLabel" type="Label" parent="Seats/SeatAITop/InfoPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 1)
+theme_override_font_sizes/font_size = 14
+text = "$1,000"
+horizontal_alignment = 1
+
+[node name="HandDescLabel" type="Label" parent="Seats/SeatAITop"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -80.0
+offset_top = -18.0
+offset_right = 80.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 0.9)
+theme_override_font_sizes/font_size = 11
+text = "Straight"
+horizontal_alignment = 1
+
+[node name="BetBadge" type="PanelContainer" parent="Seats/SeatAITop"]
+visible = false
+custom_minimum_size = Vector2(76, 24)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -38.0
+offset_top = 6.0
+offset_right = 38.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_bet_badge")
+
+[node name="Label" type="Label" parent="Seats/SeatAITop/BetBadge"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.84, 0.38, 1)
+theme_override_font_sizes/font_size = 12
+text = "$20"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ActionBadge" type="PanelContainer" parent="Seats/SeatAITop"]
+visible = false
+custom_minimum_size = Vector2(80, 24)
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 8.0
+offset_top = -12.0
+offset_right = 88.0
+offset_bottom = 12.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_action_badge")
+
+[node name="Label" type="Label" parent="Seats/SeatAITop/ActionBadge"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 11
+text = "Check"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DealerBadge" type="Panel" parent="Seats/SeatAITop"]
+visible = false
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 1
+anchors_preset = 0
+offset_left = -20.0
+offset_top = 30.0
+offset_right = 4.0
+offset_bottom = 54.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_dealer")
+
+[node name="Label" type="Label" parent="Seats/SeatAITop/DealerBadge"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.1, 0.1, 0.1, 1)
+theme_override_font_sizes/font_size = 12
+text = "D"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SeatAIRight" type="Control" parent="Seats"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -290.0
+offset_top = -105.0
+offset_right = -90.0
+offset_bottom = 105.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="CardsContainer" type="HBoxContainer" parent="Seats/SeatAIRight"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -90.0
+offset_top = 0.0
+offset_right = 90.0
+offset_bottom = 116.0
+grow_horizontal = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="SlotLeft" type="Control" parent="Seats/SeatAIRight/CardsContainer"]
+custom_minimum_size = Vector2(84, 116)
+layout_mode = 2
+
+[node name="SlotRight" type="Control" parent="Seats/SeatAIRight/CardsContainer"]
+custom_minimum_size = Vector2(84, 116)
+layout_mode = 2
+
+[node name="InfoPanel" type="PanelContainer" parent="Seats/SeatAIRight"]
+custom_minimum_size = Vector2(150, 48)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -75.0
+offset_top = -68.0
+offset_right = 75.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_player_info")
+
+[node name="VBox" type="VBoxContainer" parent="Seats/SeatAIRight/InfoPanel"]
+layout_mode = 2
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="NameLabel" type="Label" parent="Seats/SeatAIRight/InfoPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
+theme_override_font_sizes/font_size = 13
+text = "Charlie"
+horizontal_alignment = 1
+
+[node name="ChipsLabel" type="Label" parent="Seats/SeatAIRight/InfoPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 1)
+theme_override_font_sizes/font_size = 14
+text = "$1,000"
+horizontal_alignment = 1
+
+[node name="HandDescLabel" type="Label" parent="Seats/SeatAIRight"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -80.0
+offset_top = -18.0
+offset_right = 80.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 0.9)
+theme_override_font_sizes/font_size = 11
+text = "Flush"
+horizontal_alignment = 1
+
+[node name="BetBadge" type="PanelContainer" parent="Seats/SeatAIRight"]
+visible = false
+custom_minimum_size = Vector2(76, 24)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = -66.0
+offset_top = -12.0
+offset_right = 10.0
+offset_bottom = 12.0
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bet_badge")
+
+[node name="Label" type="Label" parent="Seats/SeatAIRight/BetBadge"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.84, 0.38, 1)
+theme_override_font_sizes/font_size = 12
+text = "$20"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ActionBadge" type="PanelContainer" parent="Seats/SeatAIRight"]
+visible = false
+custom_minimum_size = Vector2(80, 24)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -40.0
+offset_top = -28.0
+offset_right = 40.0
+offset_bottom = -4.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_action_badge")
+
+[node name="Label" type="Label" parent="Seats/SeatAIRight/ActionBadge"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 11
+text = "Raise $40"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DealerBadge" type="Panel" parent="Seats/SeatAIRight"]
+visible = false
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 1
+anchors_preset = 0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 34.0
+offset_bottom = 34.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_dealer")
+
+[node name="Label" type="Label" parent="Seats/SeatAIRight/DealerBadge"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.1, 0.1, 0.1, 1)
+theme_override_font_sizes/font_size = 12
+text = "D"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CardLayer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="UICanvas" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TopBar" type="HBoxContainer" parent="UICanvas"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 20.0
+offset_top = 14.0
+offset_right = -20.0
+offset_bottom = 50.0
+grow_horizontal = 2
+theme_override_constants/separation = 14
+
+[node name="BtnMenu" type="Button" parent="UICanvas/TopBar"]
+custom_minimum_size = Vector2(90, 36)
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_secondary_hover")
+text = "Menu"
+
+[node name="BtnRestartGame" type="Button" parent="UICanvas/TopBar"]
+custom_minimum_size = Vector2(90, 36)
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_secondary_hover")
+text = "Restart"
+
+[node name="Spacer" type="Control" parent="UICanvas/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BlindsLabel" type="Label" parent="UICanvas/TopBar"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 0.95)
+theme_override_font_sizes/font_size = 14
+text = "Blinds: $10 / $20"
+vertical_alignment = 1
+
+[node name="HandCounterLabel" type="Label" parent="UICanvas/TopBar"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 0.92, 1)
+theme_override_font_sizes/font_size = 14
+text = "Hand #1"
+vertical_alignment = 1
+
+[node name="PlayerControls" type="Control" parent="UICanvas"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -390.0
+offset_top = -90.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="HBox" type="HBoxContainer" parent="UICanvas/PlayerControls"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+alignment = 2
+
+[node name="BtnFold" type="Button" parent="UICanvas/PlayerControls/HBox"]
+custom_minimum_size = Vector2(110, 52)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_danger")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_danger_hover")
+text = "Fold"
+
+[node name="BtnCheckCall" type="Button" parent="UICanvas/PlayerControls/HBox"]
+custom_minimum_size = Vector2(120, 52)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.1, 0.12, 1)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_primary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_primary_hover")
+text = "Check"
+
+[node name="BtnBetRaise" type="Button" parent="UICanvas/PlayerControls/HBox"]
+custom_minimum_size = Vector2(110, 52)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_secondary_hover")
+text = "Raise"
+
+[node name="RaisePopup" type="Control" parent="UICanvas"]
+visible = false
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -390.0
+offset_top = -290.0
+offset_right = -20.0
+offset_bottom = -96.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="Panel" type="PanelContainer" parent="UICanvas/RaisePopup"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dialog")
+
+[node name="VBox" type="VBoxContainer" parent="UICanvas/RaisePopup/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="AmountLabel" type="Label" parent="UICanvas/RaisePopup/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 1)
+theme_override_font_sizes/font_size = 16
+text = "Total Bet: $40"
+horizontal_alignment = 1
+
+[node name="RaiseSlider" type="HSlider" parent="UICanvas/RaisePopup/Panel/VBox"]
+layout_mode = 2
+min_value = 40.0
+max_value = 1000.0
+step = 10.0
+value = 40.0
+
+[node name="QuickHBox" type="HBoxContainer" parent="UICanvas/RaisePopup/Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="BtnMin" type="Button" parent="UICanvas/RaisePopup/Panel/VBox/QuickHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary")
+text = "Min"
+
+[node name="BtnHalfPot" type="Button" parent="UICanvas/RaisePopup/Panel/VBox/QuickHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary")
+text = "1/2 Pot"
+
+[node name="BtnPot" type="Button" parent="UICanvas/RaisePopup/Panel/VBox/QuickHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary")
+text = "Pot"
+
+[node name="BtnAllIn" type="Button" parent="UICanvas/RaisePopup/Panel/VBox/QuickHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary")
+text = "All In"
+
+[node name="BtnConfirmRaise" type="Button" parent="UICanvas/RaisePopup/Panel/VBox"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.1, 0.12, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_primary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_primary_hover")
+text = "Confirm Bet $40"
+
+[node name="BtnCancelRaise" type="Button" parent="UICanvas/RaisePopup/Panel/VBox"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary")
+text = "Cancel"
+
+[node name="ShowdownBanner" type="PanelContainer" parent="UICanvas"]
+visible = false
+custom_minimum_size = Vector2(440, 160)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -80.0
+offset_right = 220.0
+offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dialog")
+
+[node name="VBox" type="VBoxContainer" parent="UICanvas/ShowdownBanner"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="WinnerTitle" type="Label" parent="UICanvas/ShowdownBanner/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 1)
+theme_override_font_sizes/font_size = 18
+text = "HAND WINNER"
+horizontal_alignment = 1
+
+[node name="WinnerDetails" type="Label" parent="UICanvas/ShowdownBanner/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
+theme_override_font_sizes/font_size = 14
+text = "You won $320 with Full House!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="BtnNextHand" type="Button" parent="UICanvas/ShowdownBanner/VBox"]
+custom_minimum_size = Vector2(160, 38)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.08, 0.1, 0.12, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_primary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_primary_hover")
+text = "Next Hand"
+
+[node name="GameOverModal" type="Control" parent="UICanvas"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dimmer" type="ColorRect" parent="UICanvas/GameOverModal"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.7)
+
+[node name="Panel" type="PanelContainer" parent="UICanvas/GameOverModal"]
+custom_minimum_size = Vector2(400, 240)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -120.0
+offset_right = 200.0
+offset_bottom = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dialog")
+
+[node name="VBox" type="VBoxContainer" parent="UICanvas/GameOverModal/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="Title" type="Label" parent="UICanvas/GameOverModal/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 1)
+theme_override_font_sizes/font_size = 20
+text = "TOURNAMENT CHAMPION!"
+horizontal_alignment = 1
+
+[node name="Desc" type="Label" parent="UICanvas/GameOverModal/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 13
+text = "You won all the chips!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="BtnRebuy" type="Button" parent="UICanvas/GameOverModal/Panel/VBox"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.1, 0.12, 1)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_primary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_primary_hover")
+text = "Play Again ($1,000)"
+
+[node name="BtnMenu" type="Button" parent="UICanvas/GameOverModal/Panel/VBox"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_secondary_hover")
+text = "Return to Menu"

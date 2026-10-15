@@ -7,18 +7,19 @@ func _init(p_id: int, p_name: String) -> void:
 	super._init(p_id, p_name, false)
 
 ## Selects the best move (tile + end) based on domino strategy heuristics
-func choose_move(board: DominoBoard) -> Dictionary:
+func choose_move(board) -> Dictionary:
 	var playable: Array[DominoTile] = get_playable_tiles(board)
 	if playable.is_empty():
 		return {}
 
-	# If board is empty, lead with highest double or heaviest tile
+	# If board is empty, lead with highest double (or 6-6 for Sebastopol)
 	if board.is_empty():
 		var dbl: DominoTile = get_highest_double()
+		var start_end: String = "center" if board.has_method("get_filled_arms_count") else "first"
 		if dbl != null:
-			return {"tile": dbl, "end": "first"}
+			return {"tile": dbl, "end": start_end}
 		var best_tile: DominoTile = get_highest_tile()
-		return {"tile": best_tile, "end": "first"}
+		return {"tile": best_tile, "end": start_end}
 
 	var best_score: float = -999999.0
 	var chosen_move: Dictionary = {}
@@ -33,7 +34,7 @@ func choose_move(board: DominoBoard) -> Dictionary:
 
 	return chosen_move
 
-func _evaluate_move(tile: DominoTile, end_name: String, board: DominoBoard) -> float:
+func _evaluate_move(tile: DominoTile, end_name: String, board) -> float:
 	var score: float = 0.0
 
 	# 1. Prioritize playing doubles to avoid getting stuck with them
@@ -44,7 +45,12 @@ func _evaluate_move(tile: DominoTile, end_name: String, board: DominoBoard) -> f
 	score += tile.pip_sum() * 1.5
 
 	# 3. Synergy with remaining hand
-	var matching_end_val: int = board.open_left_val if end_name == "left" else board.open_right_val
+	var matching_end_val: int = -1
+	if board.has_method("get_open_val"):
+		matching_end_val = board.get_open_val(end_name)
+	else:
+		matching_end_val = board.open_left_val if end_name == "left" else board.open_right_val
+
 	var resulting_open_val: int = tile.get_other_val(matching_end_val)
 
 	var matching_count: int = 0

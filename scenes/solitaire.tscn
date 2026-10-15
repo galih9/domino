@@ -3,19 +3,44 @@
 [ext_resource type="Script" path="res://scripts/SolitaireGame.gd" id="1_sol"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_table"]
-bg_color = Color(0.045, 0.1, 0.07, 1)
+bg_color = Color(0.08, 0.24, 0.16, 1)
+border_width_left = 12
+border_width_top = 12
+border_width_right = 12
+border_width_bottom = 12
+border_color = Color(0.22, 0.15, 0.08, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_size = 14
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slot"]
-bg_color = Color(0.08, 0.14, 0.11, 0.45)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(1, 1, 1, 0.15)
+bg_color = Color(0.04, 0.14, 0.09, 0.5)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.85, 0.95, 0.9, 0.45)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_glow"]
+draw_center = false
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.96, 0.84, 0.38, 0.95)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0.96, 0.84, 0.38, 0.45)
+shadow_size = 6
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hud_bar"]
 content_margin_left = 16.0
@@ -174,11 +199,25 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_sol")
 
+[node name="OuterBackground" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.03, 0.05, 0.04, 1)
+
 [node name="TableBackground" type="Panel" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -216,10 +255,25 @@ offset_right = 30.0
 offset_bottom = 12.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0.7, 0.76, 0.82, 0.45)
+theme_override_colors/font_color = Color(0.85, 0.95, 0.9, 0.6)
 theme_override_font_sizes/font_size = 13
 text = "STOCK"
 horizontal_alignment = 1
+
+[node name="HighlightGlow" type="Panel" parent="SlotsContainer/StockSlot"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 2.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_glow")
 
 [node name="WasteSlot" type="Panel" parent="SlotsContainer"]
 custom_minimum_size = Vector2(100, 136)
@@ -228,7 +282,7 @@ offset_left = 290.0
 offset_top = 62.0
 offset_right = 390.0
 offset_bottom = 198.0
-mouse_filter = 2
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
 
 [node name="Label" type="Label" parent="SlotsContainer/WasteSlot"]
@@ -244,10 +298,25 @@ offset_right = 30.0
 offset_bottom = 12.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0.7, 0.76, 0.82, 0.45)
+theme_override_colors/font_color = Color(0.85, 0.95, 0.9, 0.6)
 theme_override_font_sizes/font_size = 13
 text = "WASTE"
 horizontal_alignment = 1
+
+[node name="HighlightGlow" type="Panel" parent="SlotsContainer/WasteSlot"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 2.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_glow")
 
 [node name="Foundation0" type="Panel" parent="SlotsContainer"]
 custom_minimum_size = Vector2(100, 136)
@@ -256,7 +325,7 @@ offset_left = 590.0
 offset_top = 62.0
 offset_right = 690.0
 offset_bottom = 198.0
-mouse_filter = 2
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
 
 [node name="Emblem" type="Label" parent="SlotsContainer/Foundation0"]
@@ -272,10 +341,25 @@ offset_right = 20.0
 offset_bottom = 18.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0.7, 0.76, 0.82, 0.45)
+theme_override_colors/font_color = Color(0.85, 0.95, 0.9, 0.6)
 theme_override_font_sizes/font_size = 28
-text = "♣"
+text = "A"
 horizontal_alignment = 1
+
+[node name="HighlightGlow" type="Panel" parent="SlotsContainer/Foundation0"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 2.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_glow")
 
 [node name="Foundation1" type="Panel" parent="SlotsContainer"]
 custom_minimum_size = Vector2(100, 136)
@@ -284,7 +368,7 @@ offset_left = 740.0
 offset_top = 62.0
 offset_right = 840.0
 offset_bottom = 198.0
-mouse_filter = 2
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
 
 [node name="Emblem" type="Label" parent="SlotsContainer/Foundation1"]
@@ -300,10 +384,25 @@ offset_right = 20.0
 offset_bottom = 18.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0.85, 0.35, 0.35, 0.45)
+theme_override_colors/font_color = Color(0.95, 0.45, 0.45, 0.65)
 theme_override_font_sizes/font_size = 28
-text = "♦"
+text = "A"
 horizontal_alignment = 1
+
+[node name="HighlightGlow" type="Panel" parent="SlotsContainer/Foundation1"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 2.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_glow")
 
 [node name="Foundation2" type="Panel" parent="SlotsContainer"]
 custom_minimum_size = Vector2(100, 136)
@@ -312,7 +411,7 @@ offset_left = 890.0
 offset_top = 62.0
 offset_right = 990.0
 offset_bottom = 198.0
-mouse_filter = 2
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
 
 [node name="Emblem" type="Label" parent="SlotsContainer/Foundation2"]
@@ -328,10 +427,25 @@ offset_right = 20.0
 offset_bottom = 18.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0.85, 0.35, 0.35, 0.45)
+theme_override_colors/font_color = Color(0.95, 0.45, 0.45, 0.65)
 theme_override_font_sizes/font_size = 28
-text = "♥"
+text = "A"
 horizontal_alignment = 1
+
+[node name="HighlightGlow" type="Panel" parent="SlotsContainer/Foundation2"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 2.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_glow")
 
 [node name="Foundation3" type="Panel" parent="SlotsContainer"]
 custom_minimum_size = Vector2(100, 136)
@@ -340,7 +454,7 @@ offset_left = 1040.0
 offset_top = 62.0
 offset_right = 1140.0
 offset_bottom = 198.0
-mouse_filter = 2
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
 
 [node name="Emblem" type="Label" parent="SlotsContainer/Foundation3"]
@@ -356,10 +470,25 @@ offset_right = 20.0
 offset_bottom = 18.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0.7, 0.76, 0.82, 0.45)
+theme_override_colors/font_color = Color(0.85, 0.95, 0.9, 0.6)
 theme_override_font_sizes/font_size = 28
-text = "♠"
+text = "A"
 horizontal_alignment = 1
+
+[node name="HighlightGlow" type="Panel" parent="SlotsContainer/Foundation3"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 2.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_glow")
 
 [node name="Tableau0" type="Panel" parent="SlotsContainer"]
 custom_minimum_size = Vector2(100, 136)
@@ -368,8 +497,42 @@ offset_left = 140.0
 offset_top = 220.0
 offset_right = 240.0
 offset_bottom = 356.0
-mouse_filter = 2
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
+
+[node name="Emblem" type="Label" parent="SlotsContainer/Tableau0"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -18.0
+offset_right = 20.0
+offset_bottom = 18.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.85, 0.95, 0.9, 0.25)
+theme_override_font_sizes/font_size = 28
+text = "K"
+horizontal_alignment = 1
+
+[node name="HighlightGlow" type="Panel" parent="SlotsContainer/Tableau0"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 2.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_glow")
 
 [node name="Tableau1" type="Panel" parent="SlotsContainer"]
 custom_minimum_size = Vector2(100, 136)
@@ -378,8 +541,42 @@ offset_left = 290.0
 offset_top = 220.0
 offset_right = 390.0
 offset_bottom = 356.0
-mouse_filter = 2
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
+
+[node name="Emblem" type="Label" parent="SlotsContainer/Tableau1"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -18.0
+offset_right = 20.0
+offset_bottom = 18.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.85, 0.95, 0.9, 0.25)
+theme_override_font_sizes/font_size = 28
+text = "K"
+horizontal_alignment = 1
+
+[node name="HighlightGlow" type="Panel" parent="SlotsContainer/Tableau1"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 2.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_glow")
 
 [node name="Tableau2" type="Panel" parent="SlotsContainer"]
 custom_minimum_size = Vector2(100, 136)
@@ -388,8 +585,42 @@ offset_left = 440.0
 offset_top = 220.0
 offset_right = 540.0
 offset_bottom = 356.0
-mouse_filter = 2
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
+
+[node name="Emblem" type="Label" parent="SlotsContainer/Tableau2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -18.0
+offset_right = 20.0
+offset_bottom = 18.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.85, 0.95, 0.9, 0.25)
+theme_override_font_sizes/font_size = 28
+text = "K"
+horizontal_alignment = 1
+
+[node name="HighlightGlow" type="Panel" parent="SlotsContainer/Tableau2"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 2.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_glow")
 
 [node name="Tableau3" type="Panel" parent="SlotsContainer"]
 custom_minimum_size = Vector2(100, 136)
@@ -398,8 +629,42 @@ offset_left = 590.0
 offset_top = 220.0
 offset_right = 690.0
 offset_bottom = 356.0
-mouse_filter = 2
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
+
+[node name="Emblem" type="Label" parent="SlotsContainer/Tableau3"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -18.0
+offset_right = 20.0
+offset_bottom = 18.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.85, 0.95, 0.9, 0.25)
+theme_override_font_sizes/font_size = 28
+text = "K"
+horizontal_alignment = 1
+
+[node name="HighlightGlow" type="Panel" parent="SlotsContainer/Tableau3"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 2.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_glow")
 
 [node name="Tableau4" type="Panel" parent="SlotsContainer"]
 custom_minimum_size = Vector2(100, 136)
@@ -408,8 +673,42 @@ offset_left = 740.0
 offset_top = 220.0
 offset_right = 840.0
 offset_bottom = 356.0
-mouse_filter = 2
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
+
+[node name="Emblem" type="Label" parent="SlotsContainer/Tableau4"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -18.0
+offset_right = 20.0
+offset_bottom = 18.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.85, 0.95, 0.9, 0.25)
+theme_override_font_sizes/font_size = 28
+text = "K"
+horizontal_alignment = 1
+
+[node name="HighlightGlow" type="Panel" parent="SlotsContainer/Tableau4"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 2.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_glow")
 
 [node name="Tableau5" type="Panel" parent="SlotsContainer"]
 custom_minimum_size = Vector2(100, 136)
@@ -418,8 +717,42 @@ offset_left = 890.0
 offset_top = 220.0
 offset_right = 990.0
 offset_bottom = 356.0
-mouse_filter = 2
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
+
+[node name="Emblem" type="Label" parent="SlotsContainer/Tableau5"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -18.0
+offset_right = 20.0
+offset_bottom = 18.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.85, 0.95, 0.9, 0.25)
+theme_override_font_sizes/font_size = 28
+text = "K"
+horizontal_alignment = 1
+
+[node name="HighlightGlow" type="Panel" parent="SlotsContainer/Tableau5"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 2.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_glow")
 
 [node name="Tableau6" type="Panel" parent="SlotsContainer"]
 custom_minimum_size = Vector2(100, 136)
@@ -428,8 +761,42 @@ offset_left = 1040.0
 offset_top = 220.0
 offset_right = 1140.0
 offset_bottom = 356.0
-mouse_filter = 2
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
+
+[node name="Emblem" type="Label" parent="SlotsContainer/Tableau6"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -18.0
+offset_right = 20.0
+offset_bottom = 18.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.85, 0.95, 0.9, 0.25)
+theme_override_font_sizes/font_size = 28
+text = "K"
+horizontal_alignment = 1
+
+[node name="HighlightGlow" type="Panel" parent="SlotsContainer/Tableau6"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 2.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_glow")
 
 [node name="CardLayer" type="Control" parent="."]
 layout_mode = 1
@@ -524,7 +891,7 @@ theme_override_font_sizes/font_size = 12
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_ui")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_ui_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_ui_pressed")
-text = "↺ Undo"
+text = "Undo"
 
 [node name="BtnHint" type="Button" parent="UICanvas/HUD/TopBar/HBox"]
 layout_mode = 2
@@ -532,7 +899,7 @@ theme_override_font_sizes/font_size = 12
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_ui")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_ui_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_ui_pressed")
-text = "💡 Hint"
+text = "Hint"
 
 [node name="BtnAutoFinish" type="Button" parent="UICanvas/HUD/TopBar/HBox"]
 visible = false
@@ -542,7 +909,7 @@ theme_override_font_sizes/font_size = 12
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_primary")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_primary_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_primary_pressed")
-text = "⚡ Auto-Finish"
+text = "Auto-Finish"
 
 [node name="BtnRestart" type="Button" parent="UICanvas/HUD/TopBar/HBox"]
 layout_mode = 2
@@ -622,8 +989,8 @@ alignment = 1
 [node name="Stars" type="Label" parent="UICanvas/VictoryDialog/Panel/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 1)
-theme_override_font_sizes/font_size = 28
-text = "⭐⭐⭐"
+theme_override_font_sizes/font_size = 20
+text = "VICTORY"
 horizontal_alignment = 1
 
 [node name="Title" type="Label" parent="UICanvas/VictoryDialog/Panel/VBox"]

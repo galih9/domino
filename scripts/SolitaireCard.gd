@@ -9,6 +9,9 @@ signal card_double_clicked(card: SolitaireCard)
 signal drag_started(card: SolitaireCard, global_pos: Vector2)
 signal drag_updated(card: SolitaireCard, global_pos: Vector2)
 signal drag_ended(card: SolitaireCard, global_pos: Vector2)
+signal card_hovered(card: SolitaireCard, is_hovering: bool)
+
+static var is_any_card_dragging: bool = false
 
 @export var suit: String = "Spades" # Clubs, Diamonds, Hearts, Spades
 @export var rank: int = 1 # 1 (Ace) to 13 (King)
@@ -20,6 +23,7 @@ var base_pos: Vector2 = Vector2.ZERO
 
 var _is_pressed: bool = false
 var _is_dragging: bool = false
+var _is_hovered: bool = false
 var is_moving: bool = false
 var _press_pos: Vector2 = Vector2.ZERO
 var _last_click_time: float = 0.0
@@ -47,6 +51,8 @@ func _ready() -> void:
 	if highlight_glow != null:
 		highlight_glow.visible = false
 
+	mouse_entered.connect(_on_mouse_entered)
+	mouse_exited.connect(_on_mouse_exited)
 	gui_input.connect(_on_gui_input)
 
 func setup(p_suit: String, p_rank: int, p_face_up: bool = false) -> void:
@@ -100,6 +106,7 @@ func flip_to(face_up: bool, duration: float = 0.22) -> Tween:
 	if _flip_tween and _flip_tween.is_valid():
 		_flip_tween.kill()
 
+	set_highlight(false)
 	var orig_scale_x: float = scale.x if scale.x > 0.0 else 1.0
 
 	var tween: Tween = create_tween()
@@ -110,6 +117,9 @@ func flip_to(face_up: bool, duration: float = 0.22) -> Tween:
 	)
 	tween.set_ease(Tween.EASE_OUT)
 	tween.tween_property(self, "scale:x", orig_scale_x, duration * 0.5)
+	tween.chain().tween_callback(func():
+		_update_hover_state()
+	)
 	_flip_tween = tween
 	return tween
 
@@ -119,6 +129,7 @@ func animate_to(target_pos: Vector2, target_rot: float = 0.0, target_scale: Vect
 		_move_tween.kill()
 
 	is_moving = true
+	set_highlight(false)
 	base_pos = target_pos
 	var tween: Tween = create_tween().set_parallel(true)
 	tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
@@ -131,26 +142,56 @@ func animate_to(target_pos: Vector2, target_rot: float = 0.0, target_scale: Vect
 		is_moving = false
 		if final_z >= 0:
 			z_index = final_z
+		_update_hover_state()
 	)
 	_move_tween = tween
 	return tween
 
+func stop_movement() -> void:
+	if _move_tween and _move_tween.is_valid():
+		_move_tween.kill()
+	is_moving = false
+
 func set_highlight(active: bool) -> void:
 	if highlight_glow != null:
 		highlight_glow.visible = active
+
+func _on_mouse_entered() -> void:
+	_is_hovered = true
+	_update_hover_state()
+	card_hovered.emit(self, true)
+
+func _on_mouse_exited() -> void:
+	_is_hovered = false
+	_update_hover_state()
+	card_hovered.emit(self, false)
+
+func _update_hover_state() -> void:
+	if _is_dragging:
+		set_highlight(true)
+		return
+	if is_moving or (is_any_card_dragging and not _is_dragging):
+		set_highlight(false)
+		return
+	set_highlight(_is_hovered)
 
 func can_drag() -> bool:
 	return is_face_up and pile_type != "stock"
 
 func cancel_drag() -> void:
 	_is_dragging = false
+	is_any_card_dragging = false
+	_update_hover_state()
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
 		if _is_dragging:
 			_is_dragging = false
+			is_any_card_dragging = false
 			drag_ended.emit(self, global_position)
 		_is_pressed = false
+		_is_hovered = false
+		_update_hover_state()
 
 func _on_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
@@ -165,7 +206,9 @@ func _on_gui_input(event: InputEvent) -> void:
 		else:
 			if _is_dragging:
 				_is_dragging = false
+				is_any_card_dragging = false
 				drag_ended.emit(self, event.global_position)
+				_update_hover_state()
 			elif _is_pressed:
 				var current_time: float = Time.get_ticks_msec() / 1000.0
 				if current_time - _last_click_time < 0.28:
@@ -182,6 +225,8 @@ func _on_gui_input(event: InputEvent) -> void:
 			if not _is_dragging:
 				if can_drag() and event.global_position.distance_to(_press_pos) > 6.0:
 					_is_dragging = true
+					is_any_card_dragging = true
+					set_highlight(true)
 					drag_started.emit(self, event.global_position)
 			if _is_dragging:
 				drag_updated.emit(self, event.global_position)

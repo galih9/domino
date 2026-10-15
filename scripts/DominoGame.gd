@@ -465,8 +465,8 @@ func _on_tile_clicked(tile: DominoTile) -> void:
 	if valid_ends.size() == 1:
 		_commit_player_move(valid_ends[0])
 	elif valid_ends.size() > 1:
-		btn_play_left.text = "Left  •  %d" % board.open_left_val
-		btn_play_right.text = "Right  •  %d" % board.open_right_val
+		btn_play_left.text = "Left  |  %d" % board.open_left_val
+		btn_play_right.text = "Right  |  %d" % board.open_right_val
 		placement_prompt.visible = true
 		turn_label.text = "Choose End"
 
@@ -666,9 +666,9 @@ func _end_round_winner(winner: Player, _is_blocked: bool) -> void:
 	for p in players:
 		var pips: int = p.get_pip_sum()
 		if p == winner:
-			details_lines.append("%s  •  Winner  (+%d pts)" % [p.name, points_won])
+			details_lines.append("%s  |  Winner  (+%d pts)" % [p.name, points_won])
 		else:
-			details_lines.append("%s  •  %d pips" % [p.name, pips])
+			details_lines.append("%s  |  %d pips" % [p.name, pips])
 
 	score_details.text = "\n".join(details_lines)
 	_show_game_over()
@@ -709,9 +709,9 @@ func _end_round_blocked() -> void:
 	for p in players:
 		var pips: int = p.get_pip_sum()
 		if p == winner:
-			details_lines.append("%s  •  Winner  (+%d pts)" % [p.name, points_won])
+			details_lines.append("%s  |  Winner  (+%d pts)" % [p.name, points_won])
 		else:
-			details_lines.append("%s  •  %d pips" % [p.name, pips])
+			details_lines.append("%s  |  %d pips" % [p.name, pips])
 
 	score_details.text = "\n".join(details_lines)
 	_show_game_over()

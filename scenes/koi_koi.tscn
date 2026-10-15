@@ -1,0 +1,613 @@
+[gd_scene format=3 uid="uid://b01koikoigame"]
+
+[ext_resource type="Script" path="res://scripts/KoiKoiGame.gd" id="1_koikoi"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_table"]
+bg_color = Color(0.05, 0.09, 0.07, 1)
+border_width_left = 12
+border_width_top = 12
+border_width_right = 12
+border_width_bottom = 12
+border_color = Color(0.26, 0.14, 0.09, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+shadow_color = Color(0, 0, 0, 0.6)
+shadow_size = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_banner"]
+content_margin_left = 16.0
+content_margin_top = 6.0
+content_margin_right = 16.0
+content_margin_bottom = 6.0
+bg_color = Color(0.08, 0.12, 0.16, 0.88)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.92, 0.8, 0.38, 0.35)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pill_gold"]
+content_margin_left = 14.0
+content_margin_top = 6.0
+content_margin_right = 14.0
+content_margin_bottom = 6.0
+bg_color = Color(0.12, 0.16, 0.22, 0.92)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.96, 0.84, 0.42, 0.7)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pill_silver"]
+content_margin_left = 14.0
+content_margin_top = 6.0
+content_margin_right = 14.0
+content_margin_bottom = 6.0
+bg_color = Color(0.1, 0.13, 0.18, 0.92)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.75, 0.82, 0.9, 0.5)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_secondary"]
+content_margin_left = 14.0
+content_margin_top = 8.0
+content_margin_right = 14.0
+content_margin_bottom = 8.0
+bg_color = Color(0.14, 0.18, 0.24, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.15)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_primary"]
+content_margin_left = 22.0
+content_margin_top = 10.0
+content_margin_right = 22.0
+content_margin_bottom = 10.0
+bg_color = Color(0.92, 0.8, 0.38, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0.92, 0.8, 0.38, 0.35)
+shadow_size = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_danger"]
+content_margin_left = 22.0
+content_margin_top = 10.0
+content_margin_right = 22.0
+content_margin_bottom = 10.0
+bg_color = Color(0.85, 0.28, 0.32, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0.85, 0.28, 0.32, 0.35)
+shadow_size = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_modal"]
+content_margin_left = 26.0
+content_margin_top = 22.0
+content_margin_right = 26.0
+content_margin_bottom = 22.0
+bg_color = Color(0.08, 0.1, 0.13, 0.98)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.92, 0.8, 0.38, 0.45)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_color = Color(0, 0, 0, 0.75)
+shadow_size = 24
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_deck"]
+bg_color = Color(0.121569, 0.137255, 0.14902, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.24, 0.27, 0.3, 0.85)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+shadow_color = Color(0, 0, 0, 0.45)
+shadow_size = 6
+
+[node name="KoiKoiGame" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_koikoi")
+
+[node name="TableBackground" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 10.0
+offset_right = -12.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_table")
+
+[node name="TopBar" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 32.0
+offset_top = 22.0
+offset_right = -32.0
+offset_bottom = 60.0
+grow_horizontal = 2
+theme_override_constants/separation = 16
+
+[node name="LeftHBox" type="HBoxContainer" parent="TopBar"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TitleLabel" type="Label" parent="TopBar/LeftHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.86, 0.5, 1)
+theme_override_font_sizes/font_size = 18
+text = "KOI-KOI (こいこい)"
+vertical_alignment = 1
+
+[node name="RoundLabel" type="Label" parent="TopBar/LeftHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.78, 0.86, 1)
+theme_override_font_sizes/font_size = 14
+text = "Round 1 / 3"
+vertical_alignment = 1
+
+[node name="Spacer" type="Control" parent="TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ScoreHBox" type="HBoxContainer" parent="TopBar"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="PlayerScorePanel" type="PanelContainer" parent="TopBar/ScoreHBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pill_gold")
+
+[node name="PlayerScoreLabel" type="Label" parent="TopBar/ScoreHBox/PlayerScorePanel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.9, 0.65, 1)
+theme_override_font_sizes/font_size = 14
+text = "YOU: 0 pts"
+
+[node name="AIScorePanel" type="PanelContainer" parent="TopBar/ScoreHBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pill_silver")
+
+[node name="AIScoreLabel" type="Label" parent="TopBar/ScoreHBox/AIScorePanel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.9, 0.96, 1)
+theme_override_font_sizes/font_size = 14
+text = "OPPONENT: 0 pts"
+
+[node name="Spacer2" type="Control" parent="TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RightHBox" type="HBoxContainer" parent="TopBar"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="BtnRules" type="Button" parent="TopBar/RightHBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary")
+text = "Rules"
+
+[node name="BtnRestart" type="Button" parent="TopBar/RightHBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary")
+text = "Restart"
+
+[node name="BtnMenu" type="Button" parent="TopBar/RightHBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary")
+text = "Menu"
+
+[node name="AIHandArea" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 32.0
+offset_top = 70.0
+offset_right = -360.0
+offset_bottom = 184.0
+grow_horizontal = 2
+
+[node name="AICapturedArea" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -340.0
+offset_top = 70.0
+offset_right = -32.0
+offset_bottom = 200.0
+grow_horizontal = 0
+
+[node name="TitleLabel" type="Label" parent="AICapturedArea"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.82, 0.9, 0.9)
+theme_override_font_sizes/font_size = 13
+text = "OPPONENT: 0 pts"
+
+[node name="HBox" type="HBoxContainer" parent="AICapturedArea"]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="StatusBanner" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 160.0
+offset_top = 196.0
+offset_right = -160.0
+offset_bottom = 224.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.96, 0.88, 0.65, 0.95)
+theme_override_font_sizes/font_size = 13
+text = "Your Turn: Choose a card from your hand to play"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DeckSlot" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 48.0
+offset_top = -60.0
+offset_right = 114.0
+offset_bottom = 48.0
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_deck")
+
+[node name="CountBadge" type="PanelContainer" parent="DeckSlot"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -16.0
+offset_top = -18.0
+offset_right = 16.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_banner")
+
+[node name="Label" type="Label" parent="DeckSlot/CountBadge"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.86, 0.5, 1)
+theme_override_font_sizes/font_size = 11
+text = "24"
+horizontal_alignment = 1
+
+[node name="FieldArea" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -460.0
+offset_top = -135.0
+offset_right = 460.0
+offset_bottom = 135.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PlayerCapturedArea" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -340.0
+offset_top = -200.0
+offset_right = -32.0
+offset_bottom = -70.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="TitleLabel" type="Label" parent="PlayerCapturedArea"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.86, 0.5, 0.9)
+theme_override_font_sizes/font_size = 13
+text = "YOU: 0 pts"
+
+[node name="HBox" type="HBoxContainer" parent="PlayerCapturedArea"]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="PlayerHandArea" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+offset_left = 32.0
+offset_top = -184.0
+offset_right = -360.0
+offset_bottom = -70.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="CalloutBanner" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -45.0
+offset_right = 220.0
+offset_bottom = 45.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
+
+[node name="Label" type="Label" parent="CalloutBanner"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.88, 0.45, 1)
+theme_override_font_sizes/font_size = 24
+text = "KOI-KOI!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="KoiKoiModal" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Overlay" type="ColorRect" parent="KoiKoiModal"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.7)
+
+[node name="Panel" type="PanelContainer" parent="KoiKoiModal"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -160.0
+offset_right = 260.0
+offset_bottom = 160.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
+
+[node name="VBox" type="VBoxContainer" parent="KoiKoiModal/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="KoiKoiModal/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.84, 0.38, 1)
+theme_override_font_sizes/font_size = 20
+text = "YAKU ACHIEVED!"
+horizontal_alignment = 1
+
+[node name="YakuListLabel" type="Label" parent="KoiKoiModal/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.94, 0.98, 1)
+theme_override_font_sizes/font_size = 14
+text = "• Red Poetry Ribbons (Akatan): 5 pts"
+
+[node name="PointsLabel" type="Label" parent="KoiKoiModal/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.88, 0.48, 1)
+theme_override_font_sizes/font_size = 16
+text = "Base: 5 pts"
+horizontal_alignment = 1
+
+[node name="Explanation" type="Label" parent="KoiKoiModal/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.78, 0.86, 0.9)
+theme_override_font_sizes/font_size = 12
+text = "Call KOI-KOI to continue playing for more points (risk: score 0 if opponent scores first).
+Call STOP (Shoubu) to win this round now and bank your points!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="ButtonsHBox" type="HBoxContainer" parent="KoiKoiModal/Panel/VBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 20
+
+[node name="BtnKoiKoi" type="Button" parent="KoiKoiModal/Panel/VBox/ButtonsHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.1, 0.12, 1)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_primary")
+text = "KOI-KOI (Continue)"
+
+[node name="BtnShoubu" type="Button" parent="KoiKoiModal/Panel/VBox/ButtonsHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.98, 0.98, 1)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_danger")
+text = "STOP (Shoubu)"
+
+[node name="RoundDialog" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Overlay" type="ColorRect" parent="RoundDialog"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.7)
+
+[node name="Panel" type="PanelContainer" parent="RoundDialog"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -230.0
+offset_top = -140.0
+offset_right = 230.0
+offset_bottom = 140.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
+
+[node name="VBox" type="VBoxContainer" parent="RoundDialog/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="TitleLabel" type="Label" parent="RoundDialog/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.84, 0.38, 1)
+theme_override_font_sizes/font_size = 20
+text = "ROUND WON!"
+horizontal_alignment = 1
+
+[node name="DetailsLabel" type="Label" parent="RoundDialog/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.9, 0.96, 1)
+theme_override_font_sizes/font_size = 13
+text = "Akatan: 5 pts\nTotal: 5 points"
+horizontal_alignment = 1
+
+[node name="BtnNextRound" type="Button" parent="RoundDialog/Panel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.08, 0.1, 0.12, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_primary")
+text = "Next Round →"
+
+[node name="MatchDialog" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Overlay" type="ColorRect" parent="MatchDialog"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.75)
+
+[node name="Panel" type="PanelContainer" parent="MatchDialog"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -240.0
+offset_top = -140.0
+offset_right = 240.0
+offset_bottom = 140.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
+
+[node name="VBox" type="VBoxContainer" parent="MatchDialog/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TitleLabel" type="Label" parent="MatchDialog/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.84, 0.38, 1)
+theme_override_font_sizes/font_size = 22
+text = "MATCH VICTORY! 🏆"
+horizontal_alignment = 1
+
+[node name="DetailsLabel" type="Label" parent="MatchDialog/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.88, 0.92, 0.98, 1)
+theme_override_font_sizes/font_size = 14
+text = "Final Scores:\nYou: 12 pts  |  Opponent: 6 pts"
+horizontal_alignment = 1
+
+[node name="ButtonsHBox" type="HBoxContainer" parent="MatchDialog/Panel/VBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 16
+
+[node name="BtnRestart" type="Button" parent="MatchDialog/Panel/VBox/ButtonsHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.1, 0.12, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_primary")
+text = "Play Again"
+
+[node name="BtnMainMenu" type="Button" parent="MatchDialog/Panel/VBox/ButtonsHBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary")
+text = "Main Menu"

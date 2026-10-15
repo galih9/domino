@@ -37,6 +37,7 @@ var _drag_orig_positions: Array[Vector2] = []
 var _drag_card_offsets: Array[Vector2] = []
 var _drag_mouse_offset: Vector2 = Vector2.ZERO
 var _is_dragging: bool = false
+var _drag_hovered_slot: Panel = null
 
 # Undo Stack
 var undo_stack: Array[Dictionary] = []
@@ -117,9 +118,36 @@ func _setup_signals() -> void:
 	btn_victory_play_again.pressed.connect(func(): start_new_game(false))
 	btn_victory_menu.pressed.connect(_on_menu_clicked)
 
+	_setup_slot_hover()
+
 	btn_auto_finish.visible = false
 	victory_dialog.visible = false
 	toast_panel.visible = false
+
+func _setup_slot_hover() -> void:
+	var slots: Array[Panel] = [stock_slot, waste_slot]
+	slots.append_array(foundation_slots)
+	slots.append_array(tableau_slots)
+	for slot in slots:
+		slot.mouse_entered.connect(_on_slot_mouse_entered.bind(slot))
+		slot.mouse_exited.connect(_on_slot_mouse_exited.bind(slot))
+
+func _on_slot_mouse_entered(slot: Panel) -> void:
+	if _is_dragging:
+		return
+	_set_slot_glow(slot, true)
+
+func _on_slot_mouse_exited(slot: Panel) -> void:
+	if _is_dragging:
+		return
+	_set_slot_glow(slot, false)
+
+func _set_slot_glow(slot: Panel, active: bool) -> void:
+	if slot == null:
+		return
+	var glow: Panel = slot.get_node_or_null("HighlightGlow") as Panel
+	if glow != null:
+		glow.visible = active
 
 func _on_menu_clicked() -> void:
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
@@ -142,6 +170,15 @@ func start_new_game(reuse_seed: bool = false) -> void:
 	_dragging_cards.clear()
 	_drag_orig_positions.clear()
 	_drag_card_offsets.clear()
+
+	if _drag_hovered_slot != null:
+		_set_slot_glow(_drag_hovered_slot, false)
+		_drag_hovered_slot = null
+	var all_slots: Array[Panel] = [stock_slot, waste_slot]
+	all_slots.append_array(foundation_slots)
+	all_slots.append_array(tableau_slots)
+	for slot in all_slots:
+		_set_slot_glow(slot, false)
 
 	score = 0
 	moves_count = 0
@@ -274,6 +311,9 @@ func _restack_cards() -> void:
 			c.z_index = i
 
 func _layout_all_piles_instant() -> void:
+	for c in all_cards:
+		c.stop_movement()
+
 	# Stock
 	for i in range(stock.size()):
 		var c: SolitaireCard = stock[i]
@@ -632,6 +672,9 @@ func _on_card_drag_started(card: SolitaireCard, mouse_pos: Vector2) -> void:
 
 	_is_dragging = true
 	_drag_mouse_offset = card.global_position - mouse_pos
+	if _drag_hovered_slot != null:
+		_set_slot_glow(_drag_hovered_slot, false)
+		_drag_hovered_slot = null
 
 	var lead_base_pos: Vector2 = card.base_pos
 	for i in range(_dragging_cards.size()):
@@ -643,6 +686,7 @@ func _on_card_drag_started(card: SolitaireCard, mouse_pos: Vector2) -> void:
 		_drag_card_offsets.append(c.base_pos - lead_base_pos)
 		card_layer.move_child(c, -1)
 		c.z_index = 100 + i
+		c.set_highlight(true)
 
 func _on_card_drag_updated(card: SolitaireCard, mouse_pos: Vector2) -> void:
 	if not _is_dragging or _dragging_cards.is_empty():
@@ -652,12 +696,58 @@ func _on_card_drag_updated(card: SolitaireCard, mouse_pos: Vector2) -> void:
 	for i in range(_dragging_cards.size()):
 		_dragging_cards[i].position = lead_target + _drag_card_offsets[i]
 
+	_update_drag_slot_hover(mouse_pos, _dragging_cards[0])
+
+func _update_drag_slot_hover(mouse_pos: Vector2, lead_card: SolitaireCard) -> void:
+	var target_slot: Panel = null
+	var drop_rect := Rect2(lead_card.position, CARD_SIZE)
+
+	# 1. Foundation slots
+	if _dragging_cards.size() == 1:
+		for f_idx in range(4):
+			var f_rect := Rect2(FOUNDATION_POSITIONS[f_idx], CARD_SIZE)
+			if drop_rect.intersects(f_rect) or f_rect.has_point(mouse_pos):
+				target_slot = foundation_slots[f_idx]
+				break
+
+	# 2. Tableau slots
+	if target_slot == null:
+		for col in range(7):
+			if lead_card.pile_type == "tableau" and col == lead_card.pile_index:
+				continue
+			var col_x: float = TABLEAU_X[col]
+			var col_rect: Rect2
+			if tableau[col].is_empty():
+				col_rect = Rect2(col_x, TABLEAU_Y, CARD_SIZE.x, CARD_SIZE.y)
+			else:
+				var top_c: SolitaireCard = tableau[col].back()
+				col_rect = Rect2(col_x, TABLEAU_Y, CARD_SIZE.x, maxf(CARD_SIZE.y, top_c.position.y + CARD_SIZE.y - TABLEAU_Y))
+
+			var mouse_in_col: bool = (mouse_pos.x >= col_x - 15.0 and mouse_pos.x <= col_x + CARD_SIZE.x + 15.0 and mouse_pos.y >= TABLEAU_Y - 30.0)
+			if mouse_in_col or drop_rect.intersects(col_rect):
+				target_slot = tableau_slots[col]
+				break
+
+	if target_slot != _drag_hovered_slot:
+		if _drag_hovered_slot != null:
+			_set_slot_glow(_drag_hovered_slot, false)
+		_drag_hovered_slot = target_slot
+		if _drag_hovered_slot != null:
+			_set_slot_glow(_drag_hovered_slot, true)
+
 func _on_card_drag_ended(card: SolitaireCard, mouse_pos: Vector2) -> void:
 	if not _is_dragging or _dragging_cards.is_empty():
 		_is_dragging = false
 		_dragging_cards.clear()
 		return
 	_is_dragging = false
+
+	if _drag_hovered_slot != null:
+		_set_slot_glow(_drag_hovered_slot, false)
+		_drag_hovered_slot = null
+
+	for c in _dragging_cards:
+		c.set_highlight(false)
 
 	var lead_card: SolitaireCard = _dragging_cards[0]
 	var drop_rect := Rect2(lead_card.position, CARD_SIZE)
@@ -863,22 +953,20 @@ func _on_hint_clicked() -> void:
 
 func _highlight_hint(card: SolitaireCard, slot: Panel) -> void:
 	card.set_highlight(true)
-	var orig_color: Color = slot.modulate
-	slot.modulate = Color(0.96, 0.84, 0.38, 1.0)
+	_set_slot_glow(slot, true)
 	var t: Tween = create_tween()
 	t.tween_interval(1.2)
 	t.tween_callback(func():
 		card.set_highlight(false)
-		slot.modulate = orig_color
+		_set_slot_glow(slot, false)
 	)
 
 func _highlight_hint_slot(slot: Panel) -> void:
-	var orig_color: Color = slot.modulate
-	slot.modulate = Color(0.96, 0.84, 0.38, 1.0)
+	_set_slot_glow(slot, true)
 	var t: Tween = create_tween()
 	t.tween_interval(1.2)
 	t.tween_callback(func():
-		slot.modulate = orig_color
+		_set_slot_glow(slot, false)
 	)
 
 # Auto-Finish
@@ -943,7 +1031,7 @@ func _trigger_victory() -> void:
 	game_won.emit()
 
 	victory_title.text = "SOLITAIRE VICTORY!"
-	victory_details.text = "Final Score: %d  •  Moves: %d  •  Time: %s" % [
+	victory_details.text = "Final Score: %d  |  Moves: %d  |  Time: %s" % [
 		score, moves_count, _format_time(elapsed_seconds)
 	]
 
