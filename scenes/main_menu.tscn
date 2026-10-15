@@ -1,0 +1,818 @@
+[gd_scene format=3 uid="uid://m41nm3num0de"]
+
+[ext_resource type="Script" path="res://scripts/MainMenu.gd" id="1_menu"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_table"]
+bg_color = Color(0.045, 0.09, 0.065, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+content_margin_left = 26.0
+content_margin_top = 26.0
+content_margin_right = 26.0
+content_margin_bottom = 26.0
+bg_color = Color(0.07, 0.09, 0.12, 0.94)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.12)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_size = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_badge"]
+content_margin_left = 12.0
+content_margin_top = 4.0
+content_margin_right = 12.0
+content_margin_bottom = 4.0
+bg_color = Color(0.12, 0.16, 0.22, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_primary"]
+content_margin_left = 24.0
+content_margin_top = 13.0
+content_margin_right = 24.0
+content_margin_bottom = 13.0
+bg_color = Color(0.92, 0.8, 0.38, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0.92, 0.8, 0.38, 0.3)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_primary_hover"]
+content_margin_left = 24.0
+content_margin_top = 13.0
+content_margin_right = 24.0
+content_margin_bottom = 13.0
+bg_color = Color(0.98, 0.88, 0.48, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0.98, 0.88, 0.48, 0.4)
+shadow_size = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_primary_pressed"]
+content_margin_left = 24.0
+content_margin_top = 13.0
+content_margin_right = 24.0
+content_margin_bottom = 13.0
+bg_color = Color(0.82, 0.7, 0.3, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_secondary"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(0.12, 0.16, 0.2, 0.75)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.12)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_secondary_hover"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(0.18, 0.24, 0.3, 0.92)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.25)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_secondary_pressed"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(0.09, 0.12, 0.15, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.08)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_modal"]
+content_margin_left = 28.0
+content_margin_top = 26.0
+content_margin_right = 28.0
+content_margin_bottom = 26.0
+bg_color = Color(0.08, 0.1, 0.12, 0.98)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.14)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_color = Color(0, 0, 0, 0.7)
+shadow_size = 28
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_menu")
+
+[node name="TableBackground" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_table")
+
+[node name="AmbientTiles" type="Node2D" parent="."]
+
+[node name="MainMenuView" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterVBox" type="VBoxContainer" parent="MainMenuView"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -270.0
+offset_right = 220.0
+offset_bottom = 270.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 22
+alignment = 1
+
+[node name="HeaderVBox" type="VBoxContainer" parent="MainMenuView/CenterVBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="EmblemLabel" type="Label" parent="MainMenuView/CenterVBox/HeaderVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 1)
+theme_override_font_sizes/font_size = 32
+text = "🂠 🂠 🂠"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="MainMenuView/CenterVBox/HeaderVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94, 0.82, 0.42, 1)
+theme_override_font_sizes/font_size = 54
+text = "DOMINO"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="MainMenuView/CenterVBox/HeaderVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.78, 0.88, 1)
+theme_override_font_sizes/font_size = 14
+text = "CLASSIC & SOLITAIRE DELUXE"
+horizontal_alignment = 1
+
+[node name="ButtonsVBox" type="VBoxContainer" parent="MainMenuView/CenterVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="BtnPlayGame" type="Button" parent="MainMenuView/CenterVBox/ButtonsVBox"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.1, 0.12, 1)
+theme_override_font_sizes/font_size = 17
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_primary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_primary_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_primary_pressed")
+text = "▶   SELECT GAME MODE"
+
+[node name="BtnQuickClassic" type="Button" parent="MainMenuView/CenterVBox/ButtonsVBox"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_secondary_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_secondary_pressed")
+text = "👥   Classic Domino (vs AI)"
+
+[node name="BtnQuickSolitaire" type="Button" parent="MainMenuView/CenterVBox/ButtonsVBox"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_secondary_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_secondary_pressed")
+text = "🃏   Klondike Solitaire"
+
+[node name="BtnThemes" type="Button" parent="MainMenuView/CenterVBox/ButtonsVBox"]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.88, 0.92, 1)
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_secondary_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_secondary_pressed")
+text = "🎨   Themes & Skins"
+
+[node name="BtnRules" type="Button" parent="MainMenuView/CenterVBox/ButtonsVBox"]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.88, 0.92, 1)
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_secondary_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_secondary_pressed")
+text = "📖   How To Play"
+
+[node name="BtnQuit" type="Button" parent="MainMenuView/CenterVBox/ButtonsVBox"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.68, 0.72, 0.78, 1)
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_secondary_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_secondary_pressed")
+text = "✕   Quit Game"
+
+[node name="FooterLabel" type="Label" parent="MainMenuView/CenterVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 0.58, 0.65, 0.8)
+theme_override_font_sizes/font_size = 11
+text = "Standard 28-Tile Double-Six Set • Godot 4.7"
+horizontal_alignment = 1
+
+[node name="ModeSelectView" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TopHBox" type="HBoxContainer" parent="ModeSelectView"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 32.0
+offset_top = 22.0
+offset_right = -32.0
+offset_bottom = 60.0
+grow_horizontal = 2
+theme_override_constants/separation = 16
+
+[node name="BtnBack" type="Button" parent="ModeSelectView/TopHBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_secondary_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_secondary_pressed")
+text = "←  Main Menu"
+
+[node name="HeaderLabel" type="Label" parent="ModeSelectView/TopHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.94, 0.82, 0.42, 1)
+theme_override_font_sizes/font_size = 20
+text = "SELECT GAME MODE"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="ModeSelectView/TopHBox"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+
+[node name="CardsHBox" type="HBoxContainer" parent="ModeSelectView"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -460.0
+offset_top = -240.0
+offset_right = 460.0
+offset_bottom = 260.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="ClassicCard" type="PanelContainer" parent="ModeSelectView/CardsHBox"]
+custom_minimum_size = Vector2(430, 480)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="VBox" type="VBoxContainer" parent="ModeSelectView/CardsHBox/ClassicCard"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Badge" type="PanelContainer" parent="ModeSelectView/CardsHBox/ClassicCard/VBox"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_badge")
+
+[node name="Label" type="Label" parent="ModeSelectView/CardsHBox/ClassicCard/VBox/Badge"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 1)
+theme_override_font_sizes/font_size = 11
+text = "👥  MULTIPLAYER VS AI"
+
+[node name="Title" type="Label" parent="ModeSelectView/CardsHBox/ClassicCard/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
+theme_override_font_sizes/font_size = 24
+text = "Classic Domino"
+
+[node name="Emblem" type="Label" parent="ModeSelectView/CardsHBox/ClassicCard/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.88, 0.92, 0.9)
+theme_override_font_sizes/font_size = 30
+text = "🂠  ──  🂠"
+horizontal_alignment = 1
+
+[node name="Desc" type="Label" parent="ModeSelectView/CardsHBox/ClassicCard/VBox"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.78, 0.85, 1)
+theme_override_font_sizes/font_size = 13
+text = "Experience traditional Draw Dominoes against intelligent AI opponents. Match numbers at open chain ends, draw from the boneyard when blocked, and empty your hand to win rounds!"
+autowrap_mode = 2
+
+[node name="OptionsLabel" type="Label" parent="ModeSelectView/CardsHBox/ClassicCard/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.68, 0.76, 1)
+theme_override_font_sizes/font_size = 11
+text = "AI OPPONENTS"
+
+[node name="OpponentsHBox" type="HBoxContainer" parent="ModeSelectView/CardsHBox/ClassicCard/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BtnOpp1" type="Button" parent="ModeSelectView/CardsHBox/ClassicCard/VBox/OpponentsHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 12
+text = "1 AI"
+
+[node name="BtnOpp2" type="Button" parent="ModeSelectView/CardsHBox/ClassicCard/VBox/OpponentsHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 12
+text = "2 AI"
+
+[node name="BtnOpp3" type="Button" parent="ModeSelectView/CardsHBox/ClassicCard/VBox/OpponentsHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 12
+text = "3 AI"
+
+[node name="Spacer" type="Control" parent="ModeSelectView/CardsHBox/ClassicCard/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BtnStartClassic" type="Button" parent="ModeSelectView/CardsHBox/ClassicCard/VBox"]
+custom_minimum_size = Vector2(0, 46)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.1, 0.12, 1)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_primary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_primary_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_primary_pressed")
+text = "Play Classic"
+
+[node name="SolitaireCard" type="PanelContainer" parent="ModeSelectView/CardsHBox"]
+custom_minimum_size = Vector2(430, 480)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="VBox" type="VBoxContainer" parent="ModeSelectView/CardsHBox/SolitaireCard"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Badge" type="PanelContainer" parent="ModeSelectView/CardsHBox/SolitaireCard/VBox"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_badge")
+
+[node name="Label" type="Label" parent="ModeSelectView/CardsHBox/SolitaireCard/VBox/Badge"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 1)
+theme_override_font_sizes/font_size = 11
+text = "🃏  SINGLE PLAYER CARD GAME"
+
+[node name="Title" type="Label" parent="ModeSelectView/CardsHBox/SolitaireCard/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
+theme_override_font_sizes/font_size = 24
+text = "Klondike Solitaire"
+
+[node name="Emblem" type="Label" parent="ModeSelectView/CardsHBox/SolitaireCard/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 0.95)
+theme_override_font_sizes/font_size = 30
+text = "♠   ♥   ♦   ♣"
+horizontal_alignment = 1
+
+[node name="Desc" type="Label" parent="ModeSelectView/CardsHBox/SolitaireCard/VBox"]
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.78, 0.85, 1)
+theme_override_font_sizes/font_size = 13
+text = "Classic Klondike card patience. Build the 4 suit foundations from Ace to King, cascade 7 tableau columns in alternating colors, and clear the deck!"
+autowrap_mode = 2
+
+[node name="DrawOptionsLabel" type="Label" parent="ModeSelectView/CardsHBox/SolitaireCard/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.68, 0.76, 1)
+theme_override_font_sizes/font_size = 11
+text = "DEAL MODE"
+
+[node name="DrawModeHBox" type="HBoxContainer" parent="ModeSelectView/CardsHBox/SolitaireCard/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BtnDraw1" type="Button" parent="ModeSelectView/CardsHBox/SolitaireCard/VBox/DrawModeHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 12
+text = "Draw 1 (Casual)"
+
+[node name="BtnDraw3" type="Button" parent="ModeSelectView/CardsHBox/SolitaireCard/VBox/DrawModeHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 12
+text = "Draw 3 (Vegas)"
+
+[node name="BackOptionsLabel" type="Label" parent="ModeSelectView/CardsHBox/SolitaireCard/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.68, 0.76, 1)
+theme_override_font_sizes/font_size = 11
+text = "CARD BACK STYLE"
+
+[node name="BackStyleHBox" type="HBoxContainer" parent="ModeSelectView/CardsHBox/SolitaireCard/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BtnBackBlue" type="Button" parent="ModeSelectView/CardsHBox/SolitaireCard/VBox/BackStyleHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 12
+text = "Royal Blue"
+
+[node name="BtnBackRed" type="Button" parent="ModeSelectView/CardsHBox/SolitaireCard/VBox/BackStyleHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 12
+text = "Ruby Red"
+
+[node name="BtnBackGreen" type="Button" parent="ModeSelectView/CardsHBox/SolitaireCard/VBox/BackStyleHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 12
+text = "Emerald"
+
+[node name="Spacer" type="Control" parent="ModeSelectView/CardsHBox/SolitaireCard/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BtnStartSolitaire" type="Button" parent="ModeSelectView/CardsHBox/SolitaireCard/VBox"]
+custom_minimum_size = Vector2(0, 46)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.1, 0.12, 1)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_primary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_primary_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_primary_pressed")
+text = "Play Solitaire"
+
+[node name="ThemesModal" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DimOverlay" type="ColorRect" parent="ThemesModal"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.65)
+
+[node name="Panel" type="PanelContainer" parent="ThemesModal"]
+custom_minimum_size = Vector2(520, 320)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -160.0
+offset_right = 260.0
+offset_bottom = 160.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(260, 160)
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
+
+[node name="VBox" type="VBoxContainer" parent="ThemesModal/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="ThemesModal/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
+theme_override_font_sizes/font_size = 20
+text = "CHOOSE DOMINO THEME"
+horizontal_alignment = 1
+
+[node name="Grid" type="HBoxContainer" parent="ThemesModal/Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="BtnThemeLight" type="Button" parent="ThemesModal/Panel/VBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+text = "Light\n(Ivory)"
+
+[node name="BtnThemeDark" type="Button" parent="ThemesModal/Panel/VBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+text = "Dark\n(Midnight)"
+
+[node name="BtnThemeGinger" type="Button" parent="ThemesModal/Panel/VBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+text = "Ginger\n(Warm)"
+
+[node name="BtnThemeHearts" type="Button" parent="ThemesModal/Panel/VBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+text = "Hearts\n(Red)"
+
+[node name="BtnThemeStars" type="Button" parent="ThemesModal/Panel/VBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+text = "Stars\n(Cosmic)"
+
+[node name="Spacer" type="Control" parent="ThemesModal/Panel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BtnCloseThemes" type="Button" parent="ThemesModal/Panel/VBox"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.1, 0.12, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_primary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_primary_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_primary_pressed")
+text = "Done"
+
+[node name="RulesModal" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DimOverlay" type="ColorRect" parent="RulesModal"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.65)
+
+[node name="Panel" type="PanelContainer" parent="RulesModal"]
+custom_minimum_size = Vector2(640, 480)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -320.0
+offset_top = -240.0
+offset_right = 320.0
+offset_bottom = 240.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(320, 240)
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
+
+[node name="VBox" type="VBoxContainer" parent="RulesModal/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="RulesModal/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
+theme_override_font_sizes/font_size = 20
+text = "HOW TO PLAY"
+horizontal_alignment = 1
+
+[node name="TabsHBox" type="HBoxContainer" parent="RulesModal/Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="BtnTabClassic" type="Button" parent="RulesModal/Panel/VBox/TabsHBox"]
+custom_minimum_size = Vector2(160, 36)
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Classic Domino"
+
+[node name="BtnTabSolitaire" type="Button" parent="RulesModal/Panel/VBox/TabsHBox"]
+custom_minimum_size = Vector2(160, 36)
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Klondike Solitaire"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="RulesModal/Panel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ContentClassic" type="VBoxContainer" parent="RulesModal/Panel/VBox/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="Sec1" type="Label" parent="RulesModal/Panel/VBox/ScrollContainer/ContentClassic"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 1)
+theme_override_font_sizes/font_size = 14
+text = "• Objective & Dealing"
+
+[node name="Text1" type="Label" parent="RulesModal/Panel/VBox/ScrollContainer/ContentClassic"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
+theme_override_font_sizes/font_size = 12
+text = "A standard 28-tile double-six set is shuffled. Each player is dealt 7 tiles (or 6 tiles with 4 players). The remaining tiles form the Boneyard."
+autowrap_mode = 2
+
+[node name="Sec2" type="Label" parent="RulesModal/Panel/VBox/ScrollContainer/ContentClassic"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 1)
+theme_override_font_sizes/font_size = 14
+text = "• Turns & Placement"
+
+[node name="Text2" type="Label" parent="RulesModal/Panel/VBox/ScrollContainer/ContentClassic"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
+theme_override_font_sizes/font_size = 12
+text = "The player with the highest double starts the round. On your turn, play a tile from your hand whose pips match either open end of the domino train on the table. Doubles are placed crosswise."
+autowrap_mode = 2
+
+[node name="Sec3" type="Label" parent="RulesModal/Panel/VBox/ScrollContainer/ContentClassic"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 1)
+theme_override_font_sizes/font_size = 14
+text = "• Drawing & Passing"
+
+[node name="Text3" type="Label" parent="RulesModal/Panel/VBox/ScrollContainer/ContentClassic"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
+theme_override_font_sizes/font_size = 12
+text = "If you cannot play, you must draw tiles from the boneyard until you find a playable one. When the boneyard is empty, you must pass."
+autowrap_mode = 2
+
+[node name="Sec4" type="Label" parent="RulesModal/Panel/VBox/ScrollContainer/ContentClassic"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 1)
+theme_override_font_sizes/font_size = 14
+text = "• Scoring & Winning"
+
+[node name="Text4" type="Label" parent="RulesModal/Panel/VBox/ScrollContainer/ContentClassic"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
+theme_override_font_sizes/font_size = 12
+text = "The round ends when a player plays their last domino ('domino!'), or when the game is blocked with all players passing. The winner scores the sum of all pips remaining in opponents' hands."
+autowrap_mode = 2
+
+[node name="ContentSolitaire" type="VBoxContainer" parent="RulesModal/Panel/VBox/ScrollContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="SecS1" type="Label" parent="RulesModal/Panel/VBox/ScrollContainer/ContentSolitaire"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 1)
+theme_override_font_sizes/font_size = 14
+text = "• Objective & Foundations"
+
+[node name="TextS1" type="Label" parent="RulesModal/Panel/VBox/ScrollContainer/ContentSolitaire"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
+theme_override_font_sizes/font_size = 12
+text = "Build all four suit foundations (♠, ♥, ♦, ♣) in ascending order from Ace up to King (A, 2, 3... 10, J, Q, K). Completing all four foundations wins the game!"
+autowrap_mode = 2
+
+[node name="SecS2" type="Label" parent="RulesModal/Panel/VBox/ScrollContainer/ContentSolitaire"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 1)
+theme_override_font_sizes/font_size = 14
+text = "• Tableau Cascades"
+
+[node name="TextS2" type="Label" parent="RulesModal/Panel/VBox/ScrollContainer/ContentSolitaire"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
+theme_override_font_sizes/font_size = 12
+text = "Cards on the 7 tableau columns must be stacked in descending numerical sequence with alternating colors (e.g. Black 8 on Red 9, Red Queen on Black King). Only a King (or a pile starting with a King) can occupy an empty tableau column."
+autowrap_mode = 2
+
+[node name="SecS3" type="Label" parent="RulesModal/Panel/VBox/ScrollContainer/ContentSolitaire"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 1)
+theme_override_font_sizes/font_size = 14
+text = "• Stock & Waste Pile"
+
+[node name="TextS3" type="Label" parent="RulesModal/Panel/VBox/ScrollContainer/ContentSolitaire"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
+theme_override_font_sizes/font_size = 12
+text = "Tap the Stock deck to deal cards into the Waste pile (1 card or 3 cards depending on deal mode). When the stock runs out, tap the empty stock slot to recycle the waste pile."
+autowrap_mode = 2
+
+[node name="SecS4" type="Label" parent="RulesModal/Panel/VBox/ScrollContainer/ContentSolitaire"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 1)
+theme_override_font_sizes/font_size = 14
+text = "• Controls & Shortcuts"
+
+[node name="TextS4" type="Label" parent="RulesModal/Panel/VBox/ScrollContainer/ContentSolitaire"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
+theme_override_font_sizes/font_size = 12
+text = "• Drag & Drop: Drag single cards or valid cascade stacks.\n• Tap / Click: Tap a card to auto-move it to foundations or valid tableau columns.\n• Double Click: Quick-send card straight to its foundation.\n• Auto-Finish: Once all hidden tableau cards are turned face-up, the Auto-Finish button appears to clear the rest home automatically!\n• Undo (↺) & Hint (💡): Full move history undo and smart move suggestions."
+autowrap_mode = 2
+
+[node name="BtnCloseRules" type="Button" parent="RulesModal/Panel/VBox"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.08, 0.1, 0.12, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_primary")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_primary_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_primary_pressed")
+text = "Got It"

@@ -24,6 +24,7 @@ var right_dir: Vector2 = Vector2.RIGHT
 
 var placed_tiles: Array[DominoTile] = []
 var _bounds: Rect2 = Rect2(Vector2.ZERO, Vector2.ZERO)
+var _history: Array[Dictionary] = []
 
 func _ready() -> void:
 	reset()
@@ -36,6 +37,7 @@ func reset() -> void:
 	left_dir = Vector2.LEFT
 	right_dir = Vector2.RIGHT
 	placed_tiles.clear()
+	_history.clear()
 	_bounds = Rect2(Vector2.ZERO, Vector2.ZERO)
 
 func is_empty() -> bool:
@@ -62,6 +64,17 @@ func get_valid_ends(tile: DominoTile) -> Array[String]:
 
 ## Computes target position, rotation, and updates internal board state
 func place_tile(tile: DominoTile, end_choice: String) -> Dictionary:
+	_history.append({
+		"tile": tile,
+		"open_left_val": open_left_val,
+		"open_right_val": open_right_val,
+		"left_anchor_pos": left_anchor_pos,
+		"right_anchor_pos": right_anchor_pos,
+		"left_dir": left_dir,
+		"right_dir": right_dir,
+		"bounds": _bounds
+	})
+
 	var result: Dictionary = {
 		"position": Vector2.ZERO,
 		"rotation": 0.0,
@@ -79,6 +92,24 @@ func place_tile(tile: DominoTile, end_choice: String) -> Dictionary:
 	_update_bounds(result.position)
 	tile_placed.emit(tile, end_choice)
 	return result
+
+func can_undo() -> bool:
+	return not _history.is_empty()
+
+func undo_last_placement() -> DominoTile:
+	if _history.is_empty():
+		return null
+	var snap: Dictionary = _history.pop_back()
+	var tile: DominoTile = snap["tile"]
+	open_left_val = snap["open_left_val"]
+	open_right_val = snap["open_right_val"]
+	left_anchor_pos = snap["left_anchor_pos"]
+	right_anchor_pos = snap["right_anchor_pos"]
+	left_dir = snap["left_dir"]
+	right_dir = snap["right_dir"]
+	_bounds = snap["bounds"]
+	placed_tiles.erase(tile)
+	return tile
 
 func _place_first_tile(tile: DominoTile) -> Dictionary:
 	var pos: Vector2 = Vector2.ZERO

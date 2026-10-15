@@ -15,6 +15,7 @@ signal tile_hovered(tile: DominoTile, is_hovering: bool)
 var owner_id: int = -1 # 0: User, 1..3: AI, -1: Table/Boneyard
 var base_scale: Vector2 = Vector2.ONE
 var hand_base_pos: Vector2 = Vector2.ZERO
+var boneyard_base_pos: Vector2 = Vector2.ZERO
 
 var _is_hovered: bool = false
 var _move_tween: Tween = null
@@ -104,8 +105,6 @@ func flip_to(face_up: bool, duration: float = 0.32) -> void:
 	_flip_tween.tween_property(self, "scale:x", 0.0, duration * 0.5)
 	_flip_tween.tween_callback(func():
 		_update_texture()
-		if SoundManager.instance:
-			SoundManager.instance.play_flip()
 	)
 
 	# Expand back to target scale
@@ -114,7 +113,7 @@ func flip_to(face_up: bool, duration: float = 0.32) -> void:
 
 ## Smoothly moves the tile to a global/local position with rotation and scaling
 func animate_to(target_pos: Vector2, target_rot: float = 0.0, target_scale: Vector2 = Vector2.ONE,
-				duration: float = 0.38, play_sound: bool = true, arc_height: float = 24.0) -> Tween:
+				duration: float = 0.38, _play_sound: bool = false, _arc_height: float = 24.0, final_z: int = 0) -> Tween:
 	if _move_tween and _move_tween.is_valid():
 		_move_tween.kill()
 
@@ -132,37 +131,41 @@ func animate_to(target_pos: Vector2, target_rot: float = 0.0, target_scale: Vect
 	tween.tween_property(self, "scale", target_scale, duration)
 
 	# Elevated z-index while moving
-	z_index = 20
+	z_index = maxi(z_index, 50)
 	tween.chain().tween_callback(func():
-		z_index = 0
-		if play_sound and SoundManager.instance:
-			SoundManager.instance.play_place()
+		z_index = final_z
 	)
 	_move_tween = tween
 	return tween
 
 ## Shuffling movement effect
-func animate_shuffle(center_pos: Vector2, delay: float = 0.0, duration: float = 0.55) -> Tween:
+func animate_shuffle(center_pos: Vector2, delay: float = 0.0, duration: float = 0.6) -> Tween:
+	if _move_tween and _move_tween.is_valid():
+		_move_tween.kill()
+
 	var tween: Tween = create_tween()
 	if delay > 0.0:
 		tween.tween_interval(delay)
 
 	var angle: float = randf() * TAU
-	var radius: float = randf_range(30.0, 110.0)
+	var radius: float = randf_range(40.0, 160.0)
 	var offset: Vector2 = Vector2(cos(angle), sin(angle)) * radius
-	var intermediate_pos: Vector2 = center_pos + offset
-	var intermediate_rot: float = randf_range(-0.4, 0.4)
+	var intermediate_pos: Vector2 = center_pos + offset - Vector2(28.0, 56.0)
+	var intermediate_rot: float = randf_range(-0.5, 0.5)
 
 	tween.set_trans(Tween.TRANS_QUAD)
 	tween.set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(self, "position", intermediate_pos, duration * 0.5)
 	tween.parallel().tween_property(self, "rotation", intermediate_rot, duration * 0.5)
 
-	# Return to near center stack
-	var final_offset: Vector2 = Vector2(randf_range(-20.0, 20.0), randf_range(-15.0, 15.0))
-	tween.tween_property(self, "position", center_pos + final_offset, duration * 0.5)
-	tween.parallel().tween_property(self, "rotation", randf_range(-0.15, 0.15), duration * 0.5)
+	# Second swirl
+	var angle2: float = angle + randf_range(1.2, 2.8)
+	var radius2: float = randf_range(30.0, 130.0)
+	var final_offset: Vector2 = Vector2(cos(angle2), sin(angle2)) * radius2
+	tween.tween_property(self, "position", center_pos + final_offset - Vector2(28.0, 56.0), duration * 0.5)
+	tween.parallel().tween_property(self, "rotation", randf_range(-0.3, 0.3), duration * 0.5)
 
+	_move_tween = tween
 	return tween
 
 ## Set playable state (glow / dim)
@@ -193,12 +196,16 @@ func _update_glow(active: bool) -> void:
 		glow_border.modulate.a = 1.0
 
 func _on_mouse_entered() -> void:
-	if not is_interactable or owner_id != 0:
+	if not is_interactable:
+		return
+	if owner_id == -1:
+		_is_hovered = true
+		tile_hovered.emit(self, true)
+		return
+	if owner_id != 0:
 		return
 	_is_hovered = true
 	if is_playable:
-		if SoundManager.instance:
-			SoundManager.instance.play_hover()
 		# Slight lift up effect in hand
 		var lift_pos: Vector2 = hand_base_pos + Vector2(0, -16)
 		create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT).tween_property(self, "position", lift_pos, 0.15)
@@ -206,7 +213,13 @@ func _on_mouse_entered() -> void:
 	tile_hovered.emit(self, true)
 
 func _on_mouse_exited() -> void:
-	if not is_interactable or owner_id != 0:
+	if not is_interactable:
+		return
+	if owner_id == -1:
+		_is_hovered = false
+		tile_hovered.emit(self, false)
+		return
+	if owner_id != 0:
 		return
 	_is_hovered = false
 	if is_playable:
@@ -215,7 +228,10 @@ func _on_mouse_exited() -> void:
 	tile_hovered.emit(self, false)
 
 func _on_gui_input(event: InputEvent) -> void:
-	if not is_interactable or owner_id != 0:
+	if not is_interactable:
+		return
+	# Allow clicks on human hand tiles (owner_id == 0) and boneyard tiles (owner_id == -1)
+	if owner_id != 0 and owner_id != -1:
 		return
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		tile_clicked.emit(self)

@@ -36,11 +36,13 @@ const TileScene = preload("res://scenes/domino_tile.tscn")
 # UI references
 @onready var ui_canvas: CanvasLayer = $UICanvas
 @onready var opponent_dialog: OpponentDialog = $UICanvas/OpponentDialog
-@onready var turn_label: Label = $UICanvas/HUD/TurnLabel
+@onready var turn_label: Label = $UICanvas/HUD/TopBar/HBox/TurnPill/TurnLabel
+@onready var boneyard_panel: PanelContainer = $UICanvas/HUD/BoneyardPanel
 @onready var boneyard_btn: Button = $UICanvas/HUD/BoneyardPanel/VBox/BoneyardBtn
 @onready var boneyard_count_label: Label = $UICanvas/HUD/BoneyardPanel/VBox/CountLabel
 @onready var pass_btn: Button = $UICanvas/HUD/PassBtn
 @onready var new_game_btn: Button = $UICanvas/HUD/TopBar/HBox/NewGameBtn
+@onready var menu_btn: Button = $UICanvas/HUD/TopBar/HBox/MenuBtn
 @onready var center_view_btn: Button = $UICanvas/HUD/TopBar/HBox/CenterViewBtn
 
 # Hand Containers / Areas
@@ -73,14 +75,20 @@ const TileScene = preload("res://scenes/domino_tile.tscn")
 
 # Game Over Dialog
 @onready var game_over_panel: Control = $UICanvas/GameOverDialog
+@onready var game_over_box: PanelContainer = $UICanvas/GameOverDialog/Panel
 @onready var winner_title: Label = $UICanvas/GameOverDialog/Panel/VBox/Title
 @onready var score_details: Label = $UICanvas/GameOverDialog/Panel/VBox/Details
-@onready var btn_play_again: Button = $UICanvas/GameOverDialog/Panel/VBox/BtnPlayAgain
-@onready var btn_change_settings: Button = $UICanvas/GameOverDialog/Panel/VBox/BtnChangeSettings
+@onready var btn_play_again: Button = $UICanvas/GameOverDialog/Panel/VBox/ButtonsHBox/BtnPlayAgain
+@onready var btn_change_settings: Button = $UICanvas/GameOverDialog/Panel/VBox/ButtonsHBox/BtnChangeSettings
+@onready var btn_main_menu: Button = $UICanvas/GameOverDialog/Panel/VBox/ButtonsHBox/BtnMainMenu
 
 # Toast announcement
 @onready var toast_panel: PanelContainer = $UICanvas/ToastPanel
 @onready var toast_label: Label = $UICanvas/ToastPanel/ToastLabel
+
+# Badge styles
+var _badge_normal_style: StyleBoxFlat
+var _badge_active_style: StyleBoxFlat
 
 # Boneyard spawn position (bottom-left, above Boneyard panel)
 var boneyard_pos: Vector2 = Vector2(84, 480)
@@ -91,16 +99,53 @@ var _pan_start_mouse: Vector2 = Vector2.ZERO
 var _pan_start_board: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
+	_init_badge_styles()
 	_setup_ui_signals()
 	var vp_size: Vector2 = get_viewport_rect().size
-	boneyard_pos = Vector2(84.0, vp_size.y - 200.0)
+	boneyard_pos = Vector2(84.0, vp_size.y - 195.0)
 	board_container.position = vp_size * 0.5
 
-	# Show setup dialog at game start
-	show_setup_dialog()
+	num_opponents = GameSettings.classic_opponents
+	start_new_match()
+
+func _init_badge_styles() -> void:
+	_badge_normal_style = StyleBoxFlat.new()
+	_badge_normal_style.bg_color = Color(0.06, 0.08, 0.10, 0.88)
+	_badge_normal_style.border_width_left = 1
+	_badge_normal_style.border_width_top = 1
+	_badge_normal_style.border_width_right = 1
+	_badge_normal_style.border_width_bottom = 1
+	_badge_normal_style.border_color = Color(1.0, 1.0, 1.0, 0.1)
+	_badge_normal_style.corner_radius_top_left = 12
+	_badge_normal_style.corner_radius_top_right = 12
+	_badge_normal_style.corner_radius_bottom_right = 12
+	_badge_normal_style.corner_radius_bottom_left = 12
+	_badge_normal_style.shadow_color = Color(0, 0, 0, 0.3)
+	_badge_normal_style.shadow_size = 5
+	_badge_normal_style.content_margin_left = 14.0
+	_badge_normal_style.content_margin_top = 5.0
+	_badge_normal_style.content_margin_right = 14.0
+	_badge_normal_style.content_margin_bottom = 5.0
+
+	_badge_active_style = StyleBoxFlat.new()
+	_badge_active_style.bg_color = Color(0.09, 0.13, 0.16, 0.96)
+	_badge_active_style.border_width_left = 1
+	_badge_active_style.border_width_top = 1
+	_badge_active_style.border_width_right = 1
+	_badge_active_style.border_width_bottom = 1
+	_badge_active_style.border_color = Color(0.92, 0.8, 0.38, 0.95)
+	_badge_active_style.corner_radius_top_left = 12
+	_badge_active_style.corner_radius_top_right = 12
+	_badge_active_style.corner_radius_bottom_right = 12
+	_badge_active_style.corner_radius_bottom_left = 12
+	_badge_active_style.shadow_color = Color(0.92, 0.8, 0.38, 0.25)
+	_badge_active_style.shadow_size = 8
+	_badge_active_style.content_margin_left = 14.0
+	_badge_active_style.content_margin_top = 5.0
+	_badge_active_style.content_margin_right = 14.0
+	_badge_active_style.content_margin_bottom = 5.0
 
 func _unhandled_input(event: InputEvent) -> void:
-	# Pan with Right Mouse Button or Middle Mouse Button
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_RIGHT or event.button_index == MOUSE_BUTTON_MIDDLE:
 			if event.pressed:
@@ -121,8 +166,13 @@ func _unhandled_input(event: InputEvent) -> void:
 func _setup_ui_signals() -> void:
 	opponent_dialog.setup_confirmed.connect(_on_setup_confirmed)
 	boneyard_btn.pressed.connect(_on_boneyard_clicked)
+	boneyard_panel.gui_input.connect(func(event: InputEvent):
+		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			_on_boneyard_clicked()
+	)
 	pass_btn.pressed.connect(_on_pass_clicked)
 	new_game_btn.pressed.connect(show_setup_dialog)
+	menu_btn.pressed.connect(_on_menu_clicked)
 	center_view_btn.pressed.connect(reset_board_view)
 
 	btn_play_left.pressed.connect(func(): _commit_player_move("left"))
@@ -131,6 +181,7 @@ func _setup_ui_signals() -> void:
 
 	btn_play_again.pressed.connect(_on_play_again_pressed)
 	btn_change_settings.pressed.connect(show_setup_dialog)
+	btn_main_menu.pressed.connect(_on_menu_clicked)
 
 	pass_btn.visible = false
 	placement_prompt.visible = false
@@ -140,16 +191,20 @@ func _setup_ui_signals() -> void:
 func _on_cancel_prompt_clicked() -> void:
 	placement_prompt.visible = false
 	selected_hand_tile = null
-	turn_label.text = "Your turn! Pick a highlighted domino to play."
+	turn_label.text = "Your Turn"
 
 func show_setup_dialog() -> void:
 	current_state = State.SETUP
-	opponent_dialog.show()
+	opponent_dialog.open_modal()
 	game_over_panel.hide()
 	placement_prompt.hide()
 
+func _on_menu_clicked() -> void:
+	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+
 func _on_setup_confirmed(opponents: int, theme_name: String) -> void:
 	num_opponents = opponents
+	GameSettings.classic_opponents = opponents
 	ThemeManager.set_theme(theme_name)
 	start_new_match()
 
@@ -175,7 +230,7 @@ func start_new_match() -> void:
 	# AI Players
 	var ai_names: Array[String] = ["Alex", "Bob", "Chloe"]
 	for i in range(num_opponents):
-		var p_name: String = "AI (%s)" % ai_names[i % ai_names.size()]
+		var p_name: String = ai_names[i % ai_names.size()]
 		players.append(AIPlayer.new(i + 1, p_name))
 
 	_update_opponent_panels()
@@ -197,19 +252,25 @@ func _clear_all_tiles() -> void:
 	selected_hand_tile = null
 
 func _get_boneyard_slot_position(index: int) -> Vector2:
-	# Neat layered stack of dominoes above the Draw Tile button
-	var col: int = index % 2
-	var row: int = (index / 2) % 7
-	var layer: int = index / 14
-	var offset: Vector2 = Vector2(col * 24.0 - 12.0, row * 4.0 - 16.0 - layer * 3.0)
-	return boneyard_pos + offset - Vector2(28.0, 56.0) * 0.65
+	var stack_depth: float = -0.6 * minf(float(index), 16.0)
+	var center: Vector2 = boneyard_pos + Vector2(0.0, stack_depth)
+	return center - Vector2(28.0, 56.0)
 
 func _update_boneyard_stack(duration: float = 0.25) -> void:
 	for i in range(boneyard.size()):
 		var tile: DominoTile = boneyard[i]
 		var target_pos: Vector2 = _get_boneyard_slot_position(i)
-		tile.z_index = i
-		tile.animate_to(target_pos, 0.0, Vector2(0.65, 0.65), duration, false)
+		tile.boneyard_base_pos = target_pos
+		tile.owner_id = -1
+		tile.is_interactable = true
+		tile.rotation = 0.0
+		if duration <= 0.0:
+			tile.position = target_pos
+			tile.scale = Vector2(0.65, 0.65)
+			tile.z_index = i
+		else:
+			tile.animate_to(target_pos, 0.0, Vector2(0.65, 0.65), duration, false, 24.0, i)
+	_update_boneyard_interactivity(current_player_idx == 0 and current_state == State.PLAYING and players.size() > 0 and not players[0].has_playable(board))
 
 func _generate_tiles() -> void:
 	all_tiles.clear()
@@ -219,10 +280,8 @@ func _generate_tiles() -> void:
 		for b in range(a, 7):
 			var tile: DominoTile = TileScene.instantiate()
 			tile_layer.add_child(tile)
-			# Empty tile for back of card, initially face-down
 			tile.setup(a, b, false, -1)
 			tile.scale = Vector2(0.65, 0.65)
-			tile.position = _get_boneyard_slot_position(boneyard.size())
 			tile.tile_clicked.connect(_on_tile_clicked)
 			all_tiles.append(tile)
 			boneyard.append(tile)
@@ -234,39 +293,36 @@ func _generate_tiles() -> void:
 func start_shuffle_phase() -> void:
 	current_state = State.SHUFFLE
 	is_animating = true
-	turn_label.text = "Shuffling dominoes..."
-	if SoundManager.instance:
-		SoundManager.instance.play_shuffle()
+	turn_label.text = "Shuffling"
 
-	# Randomize array order
 	boneyard.shuffle()
 
-	# Animate tiles swirling around center table
 	var vp_size: Vector2 = get_viewport_rect().size
 	var table_center: Vector2 = vp_size * 0.5
+	var max_delay: float = 0.15
+	var shuffle_dur: float = 0.65
+
 	for i in range(boneyard.size()):
 		var tile: DominoTile = boneyard[i]
-		var delay: float = randf_range(0.0, 0.2)
-		tile.animate_shuffle(table_center, delay, 0.6)
+		tile.z_index = 10 + i
+		var delay: float = randf_range(0.0, max_delay)
+		tile.animate_shuffle(table_center, delay, shuffle_dur)
 
-	await get_tree().create_timer(0.75).timeout
+	await get_tree().create_timer(max_delay + shuffle_dur + 0.1).timeout
 
-	# Neat stack into boneyard position (above Boneyard panel, NOT in center of board!)
-	_update_boneyard_stack(0.35)
-
-	await get_tree().create_timer(0.4).timeout
+	_update_boneyard_stack(0.4)
+	await get_tree().create_timer(0.45).timeout
 	start_deal_phase()
 
 ## Dealing animation: dealing tiles to human and AI hands
 func start_deal_phase() -> void:
 	current_state = State.DEAL
-	turn_label.text = "Dealing dominoes..."
+	turn_label.text = "Dealing"
 
 	var tiles_per_player: int = 7
 	if players.size() == 4:
-		tiles_per_player = 6 # 6 tiles each for 4 players leaves 4 in boneyard
+		tiles_per_player = 6
 
-	# Round-robin deal
 	for round_num in range(tiles_per_player):
 		for p_idx in range(players.size()):
 			if boneyard.is_empty():
@@ -277,24 +333,23 @@ func start_deal_phase() -> void:
 			_update_boneyard_count()
 			_update_all_player_badges()
 
-			if SoundManager.instance:
-				SoundManager.instance.play_deal()
-
-			# Animate to player hand position
-			var target_pos: Vector2 = _get_player_hand_slot_position(p_idx, player.hand_size() - 1, player.hand_size())
+			var target_pos: Vector2 = _get_player_hand_slot_position(p_idx, round_num, tiles_per_player)
+			tile.hand_base_pos = target_pos
 			var target_scale: Vector2 = Vector2.ONE if p_idx == 0 else Vector2(0.65, 0.65)
-			tile.animate_to(target_pos, 0.0, target_scale, 0.22, false)
+			tile.animate_to(target_pos, 0.0, target_scale, 0.22, false, 24.0, round_num)
 			await get_tree().create_timer(0.06).timeout
 
 	_update_boneyard_stack(0.2)
+	await get_tree().create_timer(0.25).timeout
 
-	# Flip human player's hand face-up sequentially!
-	await get_tree().create_timer(0.2).timeout
+	_arrange_all_hands()
+
+	await get_tree().create_timer(0.15).timeout
 	var human_hand: Array[DominoTile] = players[0].hand
 	for i in range(human_hand.size()):
 		var tile: DominoTile = human_hand[i]
-		tile.flip_to(true, 0.32)
-		await get_tree().create_timer(0.07).timeout
+		tile.flip_to(true, 0.28)
+		await get_tree().create_timer(0.06).timeout
 
 	await get_tree().create_timer(0.3).timeout
 	_determine_first_turn()
@@ -314,7 +369,6 @@ func _determine_first_turn() -> void:
 				starter_idx = i
 
 	if highest_dbl == null:
-		# No doubles, find highest pip tile
 		var highest_tile: DominoTile = null
 		for i in range(players.size()):
 			var p_tile: DominoTile = players[i].get_highest_tile()
@@ -326,12 +380,12 @@ func _determine_first_turn() -> void:
 	current_player_idx = starter_idx
 	var starter: Player = players[current_player_idx]
 
-	if highest_dbl != null:
-		show_toast("%s holds [%d|%d] and goes first!" % [starter.name, highest_dbl.top_val, highest_dbl.bottom_val])
+	if starter.is_human:
+		show_toast("You go first")
 	else:
-		show_toast("%s holds the highest tile and goes first!" % [starter.name])
+		show_toast("%s goes first" % starter.name)
 
-	await get_tree().create_timer(1.2).timeout
+	await get_tree().create_timer(1.0).timeout
 	_arrange_all_hands()
 	_update_all_player_badges()
 	start_playing_turn()
@@ -357,45 +411,64 @@ func _start_human_turn() -> void:
 	for tile in human.hand:
 		tile.set_playable(playable.has(tile))
 
+	var can_draw: bool = playable.is_empty() and boneyard.size() > 0
+	_update_boneyard_interactivity(can_draw)
+
 	if playable.size() > 0:
-		turn_label.text = "Your turn! Pick a highlighted domino to play."
+		turn_label.text = "Your Turn"
 		pass_btn.visible = false
 		boneyard_btn.disabled = true
 	else:
 		if boneyard.size() > 0:
-			turn_label.text = "No playable dominoes! Draw from the boneyard."
+			turn_label.text = "Draw a Tile"
 			pass_btn.visible = false
 			boneyard_btn.disabled = false
 		else:
-			turn_label.text = "No playable dominoes and boneyard is empty! Pass turn."
+			turn_label.text = "Pass"
 			pass_btn.visible = true
 			boneyard_btn.disabled = true
+
+func _update_boneyard_interactivity(can_draw: bool) -> void:
+	if boneyard.is_empty():
+		return
+	var top_tile: DominoTile = boneyard.back()
+	for i in range(boneyard.size()):
+		var t: DominoTile = boneyard[i]
+		t.is_interactable = true
+		if t == top_tile and can_draw:
+			t.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+			t.set_playable(true)
+		else:
+			t.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND if (current_player_idx == 0 and current_state == State.PLAYING) else Control.CURSOR_ARROW
+			t.set_playable(false)
 
 func _on_tile_clicked(tile: DominoTile) -> void:
 	if current_state != State.PLAYING or is_animating:
 		return
 	if current_player_idx != 0:
-		return # Not human's turn
+		return
+
+	if tile.owner_id == -1 or boneyard.has(tile):
+		_on_boneyard_clicked()
+		return
+
 	if tile.owner_id != 0 or not tile.is_playable:
 		return
 
 	selected_hand_tile = tile
 
-	# If board is empty, play as first tile
 	if board.is_empty():
 		_commit_player_move("first")
 		return
 
 	var valid_ends: Array[String] = board.get_valid_ends(tile)
 	if valid_ends.size() == 1:
-		# Only one valid end, play immediately!
 		_commit_player_move(valid_ends[0])
 	elif valid_ends.size() > 1:
-		# Player can choose left or right end!
-		btn_play_left.text = "◀ Connect Left [%d]" % board.open_left_val
-		btn_play_right.text = "Connect Right [%d] ▶" % board.open_right_val
+		btn_play_left.text = "Left  •  %d" % board.open_left_val
+		btn_play_right.text = "Right  •  %d" % board.open_right_val
 		placement_prompt.visible = true
-		turn_label.text = "Choose which end of the train to connect to:"
+		turn_label.text = "Choose End"
 
 func _commit_player_move(end_choice: String) -> void:
 	if selected_hand_tile == null:
@@ -405,12 +478,10 @@ func _commit_player_move(end_choice: String) -> void:
 	var tile: DominoTile = selected_hand_tile
 	selected_hand_tile = null
 
-	# Remove from hand
 	players[0].remove_tile(tile)
 	tile.owner_id = -1
 	tile.set_playable(false)
 
-	# Turn off glow on all human tiles while placing
 	for t in players[0].hand:
 		t.set_playable(false)
 
@@ -420,19 +491,15 @@ func _execute_tile_placement(tile: DominoTile, end_choice: String) -> void:
 	is_animating = true
 	var place_info: Dictionary = board.place_tile(tile, end_choice)
 
-	# Ensure the tile is face up
 	tile.set_face_up(true)
 
-	# Convert board local position to global position
 	var target_pos: Vector2 = board.to_global(place_info["position"]) - tile.size * 0.5
 	var target_rot: float = place_info["rotation"]
 
-	# Move animation to board
 	tile.animate_to(target_pos, target_rot, Vector2.ONE, 0.38, true)
 
 	await get_tree().create_timer(0.4).timeout
 
-	# Reparent tile to board
 	tile.reparent(board, false)
 	tile.position = place_info["position"] - tile.size * 0.5
 	tile.rotation = target_rot
@@ -446,14 +513,14 @@ func _execute_tile_placement(tile: DominoTile, end_choice: String) -> void:
 	_check_round_end_or_next_turn()
 
 func _start_ai_turn() -> void:
-	# Clear playable highlights on human hand during AI turns
 	for tile in players[0].hand:
 		tile.set_playable(false)
+	_update_boneyard_interactivity(false)
 	boneyard_btn.disabled = true
 	pass_btn.visible = false
 
 	var ai: AIPlayer = players[current_player_idx] as AIPlayer
-	turn_label.text = "%s is thinking..." % ai.name
+	turn_label.text = "%s" % ai.name
 
 	await get_tree().create_timer(0.85).timeout
 
@@ -466,18 +533,13 @@ func _start_ai_turn() -> void:
 		ai.remove_tile(tile)
 		tile.owner_id = -1
 
-		# Flip face up as it moves onto board
 		tile.flip_to(true, 0.28)
 		_execute_tile_placement(tile, end_choice)
 	else:
-		# No move possible, try drawing from boneyard
 		if boneyard.size() > 0:
 			_ai_draw_tile(ai)
 		else:
-			# Pass turn
-			show_toast("%s passes!" % ai.name)
-			if SoundManager.instance:
-				SoundManager.instance.play_pass()
+			show_toast("%s passed" % ai.name)
 			consecutive_passes += 1
 			await get_tree().create_timer(0.8).timeout
 			_check_round_end_or_next_turn()
@@ -486,20 +548,17 @@ func _ai_draw_tile(ai: AIPlayer) -> void:
 	var tile: DominoTile = boneyard.pop_back()
 	ai.add_tile(tile)
 	_update_boneyard_count()
-	_update_boneyard_stack()
+	_update_boneyard_stack(0.2)
 	_update_all_player_badges()
 
-	show_toast("%s drew from the boneyard." % ai.name)
-	if SoundManager.instance:
-		SoundManager.instance.play_draw()
+	show_toast("%s drew" % ai.name)
 
 	var target_pos: Vector2 = _get_player_hand_slot_position(current_player_idx, ai.hand_size() - 1, ai.hand_size())
-	tile.animate_to(target_pos, 0.0, Vector2(0.65, 0.65), 0.25, false)
+	tile.animate_to(target_pos, 0.0, Vector2(0.65, 0.65), 0.25, false, 24.0, ai.hand_size() - 1)
 
-	await get_tree().create_timer(0.4).timeout
+	await get_tree().create_timer(0.3).timeout
 	_arrange_all_hands()
 
-	# Re-check if AI can play the newly drawn tile
 	var move: Dictionary = ai.choose_move(board)
 	if not move.is_empty():
 		await get_tree().create_timer(0.5).timeout
@@ -511,14 +570,11 @@ func _ai_draw_tile(ai: AIPlayer) -> void:
 		play_tile.flip_to(true, 0.28)
 		_execute_tile_placement(play_tile, end_choice)
 	else:
-		# Check if can draw again or must pass
 		if boneyard.size() > 0:
 			await get_tree().create_timer(0.4).timeout
 			_ai_draw_tile(ai)
 		else:
-			show_toast("%s has no moves and passes." % ai.name)
-			if SoundManager.instance:
-				SoundManager.instance.play_pass()
+			show_toast("%s passed" % ai.name)
 			consecutive_passes += 1
 			await get_tree().create_timer(0.8).timeout
 			_check_round_end_or_next_turn()
@@ -527,32 +583,32 @@ func _on_boneyard_clicked() -> void:
 	if current_state != State.PLAYING or is_animating:
 		return
 	if current_player_idx != 0:
-		return # Not player turn
+		return
 	if boneyard.is_empty():
 		return
 
 	var human: Player = players[0]
 	if human.has_playable(board):
-		turn_label.text = "You already have playable dominoes in hand!"
+		show_toast("Play from hand")
 		return
 
 	is_animating = true
+	_update_boneyard_interactivity(false)
 
-	# Draw tile
 	var tile: DominoTile = boneyard.pop_back()
 	human.add_tile(tile)
 	_update_boneyard_count()
-	_update_boneyard_stack()
+	_update_boneyard_stack(0.2)
 	_update_all_player_badges()
 
-	if SoundManager.instance:
-		SoundManager.instance.play_draw()
+	_arrange_all_hands()
 
 	var target_pos: Vector2 = _get_player_hand_slot_position(0, human.hand_size() - 1, human.hand_size())
-	tile.animate_to(target_pos, 0.0, Vector2.ONE, 0.28, false)
+	tile.hand_base_pos = target_pos
+	tile.animate_to(target_pos, 0.0, Vector2.ONE, 0.28, false, 24.0, 5)
 
 	await get_tree().create_timer(0.3).timeout
-	tile.flip_to(true, 0.32)
+	tile.flip_to(true, 0.3)
 	await get_tree().create_timer(0.25).timeout
 
 	_arrange_all_hands()
@@ -564,68 +620,61 @@ func _on_pass_clicked() -> void:
 		return
 	is_animating = true
 	pass_btn.visible = false
-	show_toast("You passed!")
-	if SoundManager.instance:
-		SoundManager.instance.play_pass()
+	show_toast("Passed")
 	consecutive_passes += 1
 	await get_tree().create_timer(0.6).timeout
 	is_animating = false
 	_check_round_end_or_next_turn()
 
 func _check_round_end_or_next_turn() -> void:
-	# Condition 1: Domino! (Current player has 0 tiles)
 	var current_player: Player = players[current_player_idx]
 	if current_player.hand_size() == 0:
 		_end_round_winner(current_player, false)
 		return
 
-	# Condition 2: Blocked game (all players passed in succession and boneyard empty)
 	if consecutive_passes >= players.size() and boneyard.is_empty():
 		_end_round_blocked()
 		return
 
-	# Continue to next turn
 	current_player_idx = (current_player_idx + 1) % players.size()
 	start_playing_turn()
 
-func _end_round_winner(winner: Player, is_blocked: bool) -> void:
+func _end_round_winner(winner: Player, _is_blocked: bool) -> void:
 	current_state = State.ROUND_OVER
-	if SoundManager.instance:
-		SoundManager.instance.play_win()
 
-	# Flip all remaining opponent tiles face-up so player can see them!
 	for p in players:
 		for t in p.hand:
 			t.set_playable(false)
 			t.is_interactable = false
 			t.flip_to(true, 0.25)
 
-	# Calculate points
 	var points_won: int = 0
-	var details_text: String = ""
-
 	for p in players:
-		var pips: int = p.get_pip_sum()
 		if p != winner:
-			points_won += pips
-		details_text += "%s: %d tiles (%d pips)\n" % [p.name, p.hand_size(), pips]
+			points_won += p.get_pip_sum()
 
 	winner.round_score += points_won
 
 	if winner.is_human:
-		winner_title.text = "🎉 DOMINO! YOU WON! 🎉"
-		winner_title.modulate = Color(0.3, 1.0, 0.5, 1.0)
+		winner_title.text = "Victory"
+		winner_title.modulate = Color(0.92, 0.8, 0.38, 1.0)
 	else:
-		winner_title.text = "%s Won the Round!" % winner.name
-		winner_title.modulate = Color(1.0, 0.85, 0.3, 1.0)
+		winner_title.text = "%s Wins" % winner.name
+		winner_title.modulate = Color(0.92, 0.8, 0.38, 1.0)
 
-	score_details.text = details_text + "\nPoints won: +%d points!" % points_won
-	game_over_panel.visible = true
+	var details_lines: Array[String] = []
+	for p in players:
+		var pips: int = p.get_pip_sum()
+		if p == winner:
+			details_lines.append("%s  •  Winner  (+%d pts)" % [p.name, points_won])
+		else:
+			details_lines.append("%s  •  %d pips" % [p.name, pips])
+
+	score_details.text = "\n".join(details_lines)
+	_show_game_over()
 
 func _end_round_blocked() -> void:
 	current_state = State.ROUND_OVER
-	if SoundManager.instance:
-		SoundManager.instance.play_win()
 
 	for p in players:
 		for t in p.hand:
@@ -633,14 +682,11 @@ func _end_round_blocked() -> void:
 			t.is_interactable = false
 			t.flip_to(true, 0.25)
 
-	# Lowest pip sum wins
 	var min_pips: int = 99999
 	var winner: Player = players[0]
-	var details_text: String = "Game Blocked! Pip counts:\n\n"
 
 	for p in players:
 		var pips: int = p.get_pip_sum()
-		details_text += "%s: %d tiles, %d pips\n" % [p.name, p.hand_size(), pips]
 		if pips < min_pips:
 			min_pips = pips
 			winner = p
@@ -653,18 +699,35 @@ func _end_round_blocked() -> void:
 	winner.round_score += points_won
 
 	if winner.is_human:
-		winner_title.text = "🎉 GAME BLOCKED! YOU HAVE LOWEST PIPS! 🎉"
-		winner_title.modulate = Color(0.3, 1.0, 0.5, 1.0)
+		winner_title.text = "Victory (Blocked)"
+		winner_title.modulate = Color(0.92, 0.8, 0.38, 1.0)
 	else:
-		winner_title.text = "Game Blocked! %s Wins!" % winner.name
-		winner_title.modulate = Color(1.0, 0.85, 0.3, 1.0)
+		winner_title.text = "%s Wins (Blocked)" % winner.name
+		winner_title.modulate = Color(0.92, 0.8, 0.38, 1.0)
 
-	score_details.text = details_text + "\nPoints won: +%d points!" % points_won
+	var details_lines: Array[String] = []
+	for p in players:
+		var pips: int = p.get_pip_sum()
+		if p == winner:
+			details_lines.append("%s  •  Winner  (+%d pts)" % [p.name, points_won])
+		else:
+			details_lines.append("%s  •  %d pips" % [p.name, pips])
+
+	score_details.text = "\n".join(details_lines)
+	_show_game_over()
+
+func _show_game_over() -> void:
 	game_over_panel.visible = true
+	game_over_panel.modulate.a = 0.0
+	game_over_box.scale = Vector2(0.95, 0.95)
+	var tween: Tween = create_tween().set_parallel(true)
+	tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_property(game_over_panel, "modulate:a", 1.0, 0.18)
+	tween.tween_property(game_over_box, "scale", Vector2.ONE, 0.18)
 
 ## Updates boneyard counter UI
 func _update_boneyard_count() -> void:
-	boneyard_count_label.text = "Boneyard: %d" % boneyard.size()
+	boneyard_count_label.text = "%d left" % boneyard.size()
 	boneyard_btn.disabled = boneyard.is_empty()
 
 ## Arranges tiles in all players' hands nicely
@@ -684,7 +747,6 @@ func _get_player_hand_slot_position(player_idx: int, tile_index: int, total_tile
 	var vp_size: Vector2 = get_viewport_rect().size
 
 	if player_idx == 0:
-		# Human Hand (Bottom Center)
 		var tile_w: float = 56.0
 		var max_tray_width: float = vp_size.x - 340.0
 		var spacing: float = 6.0
@@ -696,41 +758,34 @@ func _get_player_hand_slot_position(player_idx: int, tile_index: int, total_tile
 		var y: float = vp_size.y - 128.0
 		return Vector2(start_x + tile_index * (tile_w + spacing), y)
 
-	# Opponents layout based on opponent count
 	if num_opponents == 1:
-		# Single opponent: Top Center
 		var tile_w: float = 38.0
 		var spacing: float = 4.0
 		if total_tiles > 1:
 			spacing = clampf((480.0 - total_tiles * tile_w) / float(total_tiles - 1), -14.0, 4.0)
 		var total_w: float = total_tiles * tile_w + (total_tiles - 1) * spacing
 		var start_x: float = (vp_size.x - total_w) * 0.5
-		return Vector2(start_x + tile_index * (tile_w + spacing), 65.0)
+		return Vector2(start_x + tile_index * (tile_w + spacing), 60.0)
 
 	elif num_opponents == 2:
-		# 2 Opponents: P1 Top Left, P2 Top Right
 		var tile_w: float = 34.0
 		var spacing: float = 2.0
 		if player_idx == 1:
 			var start_x: float = 180.0
-			return Vector2(start_x + tile_index * (tile_w + spacing), 65.0)
+			return Vector2(start_x + tile_index * (tile_w + spacing), 60.0)
 		else:
 			var start_x: float = vp_size.x - 380.0
-			return Vector2(start_x + tile_index * (tile_w + spacing), 65.0)
+			return Vector2(start_x + tile_index * (tile_w + spacing), 60.0)
 
 	else:
-		# 3 Opponents: P1 Left, P2 Top Center, P3 Right
 		if player_idx == 1:
-			# Left
 			return Vector2(36.0, 160.0 + tile_index * 36.0)
 		elif player_idx == 2:
-			# Top
 			var tile_w: float = 34.0
 			var total_w: float = total_tiles * tile_w
 			var start_x: float = (vp_size.x - total_w) * 0.5
-			return Vector2(start_x + tile_index * 34.0, 65.0)
+			return Vector2(start_x + tile_index * 34.0, 60.0)
 		else:
-			# Right
 			return Vector2(vp_size.x - 80.0, 160.0 + tile_index * 36.0)
 
 	return Vector2.ZERO
@@ -744,32 +799,34 @@ func _update_all_player_badges() -> void:
 	if players.is_empty():
 		return
 
-	# Human player pips
-	human_badge_pips.text = "(%d pips)" % players[0].get_pip_sum()
+	human_badge_pips.text = "%d pips" % players[0].get_pip_sum()
 
-	# Opponent 1 (Top)
 	if players.size() > 1:
-		top_badge_name.text = "🤖 " + players[1].name
-		top_badge_count.text = "🁢 %d" % players[1].hand_size()
+		top_badge_name.text = players[1].name
+		top_badge_count.text = "%d tiles" % players[1].hand_size()
 
-	# Opponent 2 (Right or Left)
 	if num_opponents == 2 and players.size() > 2:
-		right_badge_name.text = "🤖 " + players[2].name
-		right_badge_count.text = "🁢 %d" % players[2].hand_size()
+		right_badge_name.text = players[2].name
+		right_badge_count.text = "%d tiles" % players[2].hand_size()
 	elif num_opponents == 3 and players.size() > 3:
-		left_badge_name.text = "🤖 " + players[2].name
-		left_badge_count.text = "🁢 %d" % players[2].hand_size()
-		right_badge_name.text = "🤖 " + players[3].name
-		right_badge_count.text = "🁢 %d" % players[3].hand_size()
+		left_badge_name.text = players[2].name
+		left_badge_count.text = "%d tiles" % players[2].hand_size()
+		right_badge_name.text = players[3].name
+		right_badge_count.text = "%d tiles" % players[3].hand_size()
+
+func _set_badge_active(badge: PanelContainer, is_active: bool) -> void:
+	if badge == null or _badge_active_style == null or _badge_normal_style == null:
+		return
+	badge.add_theme_stylebox_override("panel", _badge_active_style if is_active else _badge_normal_style)
 
 func _highlight_active_player(p_idx: int) -> void:
-	human_badge.modulate = Color(1.3, 1.3, 0.9, 1.0) if p_idx == 0 else Color(1, 1, 1, 0.8)
-	top_badge.modulate = Color(1.3, 1.3, 0.9, 1.0) if p_idx == 1 else Color(1, 1, 1, 0.8)
+	_set_badge_active(human_badge, p_idx == 0)
+	_set_badge_active(top_badge, p_idx == 1)
 	if num_opponents == 2:
-		right_badge.modulate = Color(1.3, 1.3, 0.9, 1.0) if p_idx == 2 else Color(1, 1, 1, 0.8)
+		_set_badge_active(right_badge, p_idx == 2)
 	elif num_opponents == 3:
-		left_badge.modulate = Color(1.3, 1.3, 0.9, 1.0) if p_idx == 2 else Color(1, 1, 1, 0.8)
-		right_badge.modulate = Color(1.3, 1.3, 0.9, 1.0) if p_idx == 3 else Color(1, 1, 1, 0.8)
+		_set_badge_active(left_badge, p_idx == 2)
+		_set_badge_active(right_badge, p_idx == 3)
 
 ## Auto-framing: adjusts board position and zoom so entire train remains centered and visible
 func _update_board_framing() -> void:
@@ -809,7 +866,7 @@ func show_toast(msg: String) -> void:
 	toast_panel.modulate.a = 0.0
 
 	var tween: Tween = create_tween()
-	tween.tween_property(toast_panel, "modulate:a", 1.0, 0.2)
-	tween.tween_interval(1.4)
-	tween.tween_property(toast_panel, "modulate:a", 0.0, 0.3)
+	tween.tween_property(toast_panel, "modulate:a", 1.0, 0.15)
+	tween.tween_interval(1.1)
+	tween.tween_property(toast_panel, "modulate:a", 0.0, 0.2)
 	tween.tween_callback(func(): toast_panel.visible = false)

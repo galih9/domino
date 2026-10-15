@@ -1,202 +1,266 @@
 [gd_scene format=3 uid="uid://b8d0m1n0main"]
 
-[ext_resource type="Script" path="res://scripts/DominoGame.gd" id="1_main"]
-[ext_resource type="Script" path="res://scripts/DominoBoard.gd" id="2_board"]
-[ext_resource type="PackedScene" path="res://scenes/opponent_dialog.tscn" id="3_dlg"]
-[ext_resource type="Script" path="res://scripts/SoundManager.gd" id="4_sfx"]
+[ext_resource type="Script" uid="uid://bkyxrjiueh8gj" path="res://scripts/DominoGame.gd" id="1_main"]
+[ext_resource type="Script" uid="uid://m72l4p8ciop5" path="res://scripts/DominoBoard.gd" id="2_board"]
+[ext_resource type="PackedScene" uid="uid://c8oppdlg001" path="res://scenes/opponent_dialog.tscn" id="3_dlg"]
+[ext_resource type="Script" uid="uid://dy7hymunsj6rb" path="res://scripts/SoundManager.gd" id="4_sfx"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_table"]
-bg_color = Color(0.08, 0.24, 0.16, 1)
-border_width_left = 12
-border_width_top = 12
-border_width_right = 12
-border_width_bottom = 12
-border_color = Color(0.22, 0.15, 0.08, 1)
-corner_radius_top_left = 24
-corner_radius_top_right = 24
-corner_radius_bottom_right = 24
-corner_radius_bottom_left = 24
-shadow_color = Color(0, 0, 0, 0.5)
-shadow_size = 14
+bg_color = Color(0.055, 0.12, 0.085, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hud_bar"]
-content_margin_left = 16.0
-content_margin_top = 8.0
-content_margin_right = 16.0
-content_margin_bottom = 8.0
-bg_color = Color(0.06, 0.1, 0.08, 0.85)
+content_margin_left = 18.0
+content_margin_top = 5.0
+content_margin_right = 18.0
+content_margin_bottom = 5.0
+bg_color = Color(0.06, 0.08, 0.1, 0.88)
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.08)
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
+shadow_color = Color(0, 0, 0, 0.3)
+shadow_size = 6
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_ui"]
-content_margin_left = 14.0
-content_margin_top = 6.0
-content_margin_right = 14.0
-content_margin_bottom = 6.0
-bg_color = Color(0.18, 0.32, 0.24, 0.9)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_status_pill"]
+content_margin_left = 16.0
+content_margin_top = 4.0
+content_margin_right = 16.0
+content_margin_bottom = 4.0
+bg_color = Color(0.12, 0.16, 0.2, 0.75)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.4, 0.7, 0.5, 0.6)
-corner_radius_top_left = 6
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
+border_color = Color(1, 1, 1, 0.1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hand_tray"]
-bg_color = Color(0.05, 0.12, 0.08, 0.75)
-border_width_top = 2
-border_color = Color(0.8, 0.68, 0.3, 0.4)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_ui"]
+content_margin_left = 12.0
+content_margin_top = 5.0
+content_margin_right = 12.0
+content_margin_bottom = 5.0
+bg_color = Color(0.12, 0.16, 0.2, 0.65)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.1)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_ui_pressed"]
+content_margin_left = 12.0
+content_margin_top = 5.0
+content_margin_right = 12.0
+content_margin_bottom = 5.0
+bg_color = Color(0.09, 0.12, 0.15, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.08)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_ui_hover"]
+content_margin_left = 12.0
+content_margin_top = 5.0
+content_margin_right = 12.0
+content_margin_bottom = 5.0
+bg_color = Color(0.18, 0.24, 0.3, 0.85)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.22)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_boneyard"]
 content_margin_left = 12.0
 content_margin_top = 8.0
 content_margin_right = 12.0
 content_margin_bottom = 8.0
-bg_color = Color(0.1, 0.18, 0.14, 0.85)
+bg_color = Color(0.06, 0.08, 0.1, 0.85)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.7, 0.6, 0.3, 0.6)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+border_color = Color(1, 1, 1, 0.1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pass"]
-content_margin_left = 20.0
-content_margin_top = 10.0
-content_margin_right = 20.0
-content_margin_bottom = 10.0
-bg_color = Color(0.7, 0.2, 0.15, 0.95)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(1, 0.4, 0.3, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_prompt"]
-content_margin_left = 20.0
-content_margin_top = 14.0
-content_margin_right = 20.0
-content_margin_bottom = 14.0
-bg_color = Color(0.08, 0.14, 0.12, 0.95)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(1, 0.85, 0.3, 0.9)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_toast"]
-content_margin_left = 24.0
-content_margin_top = 10.0
-content_margin_right = 24.0
-content_margin_bottom = 10.0
-bg_color = Color(0.08, 0.12, 0.1, 0.92)
+content_margin_left = 18.0
+content_margin_top = 7.0
+content_margin_right = 18.0
+content_margin_bottom = 7.0
+bg_color = Color(0.2, 0.11, 0.11, 0.92)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.9, 0.75, 0.3, 0.8)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gameover"]
-content_margin_left = 32.0
-content_margin_top = 28.0
-content_margin_right = 32.0
-content_margin_bottom = 28.0
-bg_color = Color(0.1, 0.14, 0.12, 0.97)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.95, 0.8, 0.35, 1)
+border_color = Color(0.85, 0.35, 0.32, 0.8)
 corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
-shadow_color = Color(0, 0, 0, 0.7)
-shadow_size = 24
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hand_tray"]
+bg_color = Color(0.05, 0.07, 0.09, 0.78)
+border_width_top = 1
+border_color = Color(1, 1, 1, 0.12)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+shadow_color = Color(0, 0, 0, 0.35)
+shadow_size = 14
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_badge"]
-content_margin_left = 12.0
-content_margin_top = 4.0
-content_margin_right = 12.0
-content_margin_bottom = 4.0
-bg_color = Color(0.08, 0.14, 0.11, 0.88)
+content_margin_left = 14.0
+content_margin_top = 5.0
+content_margin_right = 14.0
+content_margin_bottom = 5.0
+bg_color = Color(0.06, 0.08, 0.1, 0.88)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.6, 0.55, 0.3, 0.5)
+border_color = Color(1, 1, 1, 0.1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0, 0, 0, 0.3)
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_prompt"]
+content_margin_left = 16.0
+content_margin_top = 9.0
+content_margin_right = 16.0
+content_margin_bottom = 9.0
+bg_color = Color(0.06, 0.08, 0.1, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.15)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_size = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_toast"]
+content_margin_left = 18.0
+content_margin_top = 7.0
+content_margin_right = 18.0
+content_margin_bottom = 7.0
+bg_color = Color(0.08, 0.1, 0.12, 0.94)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.15)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+shadow_color = Color(0, 0, 0, 0.35)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gameover"]
+content_margin_left = 28.0
+content_margin_top = 24.0
+content_margin_right = 28.0
+content_margin_bottom = 24.0
+bg_color = Color(0.08, 0.1, 0.12, 0.97)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.12)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_color = Color(0, 0, 0, 0.65)
+shadow_size = 24
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_primary"]
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+bg_color = Color(0.92, 0.8, 0.38, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0.92, 0.8, 0.38, 0.25)
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_primary_pressed"]
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+bg_color = Color(0.82, 0.7, 0.3, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_badge_active"]
-content_margin_left = 12.0
-content_margin_top = 4.0
-content_margin_right = 12.0
-content_margin_bottom = 4.0
-bg_color = Color(0.12, 0.22, 0.16, 0.95)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(1, 0.85, 0.25, 0.95)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_primary_hover"]
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+bg_color = Color(0.98, 0.88, 0.48, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
-shadow_color = Color(1, 0.8, 0.2, 0.4)
+shadow_color = Color(0.98, 0.88, 0.48, 0.35)
 shadow_size = 6
 
-[node name="Main" type="Node2D"]
+[node name="Main" type="Node2D" unique_id=700569583]
 script = ExtResource("1_main")
 
-[node name="SoundManager" type="Node" parent="."]
+[node name="SoundManager" type="Node" parent="." unique_id=474383565]
 script = ExtResource("4_sfx")
 
-[node name="TableBackground" type="CanvasLayer" parent="."]
+[node name="TableBackground" type="CanvasLayer" parent="." unique_id=2027570829]
 layer = -10
 
-[node name="FeltBackground" type="Panel" parent="TableBackground"]
+[node name="FeltBackground" type="Panel" parent="TableBackground" unique_id=2026115148]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_table")
 
-[node name="BoardContainer" type="Node2D" parent="."]
+[node name="BoardContainer" type="Node2D" parent="." unique_id=944611176]
 position = Vector2(640, 360)
 
-[node name="DominoBoard" type="Node2D" parent="BoardContainer"]
+[node name="DominoBoard" type="Node2D" parent="BoardContainer" unique_id=1234129433]
 script = ExtResource("2_board")
 
-[node name="UICanvas" type="CanvasLayer" parent="."]
+[node name="UICanvas" type="CanvasLayer" parent="." unique_id=770779379]
 
-[node name="HUD" type="Control" parent="UICanvas"]
+[node name="HUD" type="Control" parent="UICanvas" unique_id=417335142]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -205,83 +269,102 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="TopBar" type="PanelContainer" parent="UICanvas/HUD"]
+[node name="TopBar" type="PanelContainer" parent="UICanvas/HUD" unique_id=1564705861]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 16.0
-offset_right = -16.0
+offset_left = 20.0
+offset_right = -20.0
 offset_bottom = 44.0
 grow_horizontal = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_hud_bar")
 
-[node name="HBox" type="HBoxContainer" parent="UICanvas/HUD/TopBar"]
+[node name="HBox" type="HBoxContainer" parent="UICanvas/HUD/TopBar" unique_id=799772618]
 layout_mode = 2
+alignment = 1
 
-[node name="Title" type="Label" parent="UICanvas/HUD/TopBar/HBox"]
+[node name="Title" type="Label" parent="UICanvas/HUD/TopBar/HBox" unique_id=55855898]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.85, 0.45, 1)
-theme_override_font_sizes/font_size = 18
-text = "DOMINOES"
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 1)
+theme_override_font_sizes/font_size = 14
+text = "DOMINO"
 
-[node name="Spacer" type="Control" parent="UICanvas/HUD/TopBar/HBox"]
+[node name="SpacerLeft" type="Control" parent="UICanvas/HUD/TopBar/HBox" unique_id=1878985757]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="CenterViewBtn" type="Button" parent="UICanvas/HUD/TopBar/HBox"]
+[node name="TurnPill" type="PanelContainer" parent="UICanvas/HUD/TopBar/HBox" unique_id=1957151926]
 layout_mode = 2
-theme_override_font_sizes/font_size = 13
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn_ui")
-text = "Center Board"
+theme_override_styles/panel = SubResource("StyleBoxFlat_status_pill")
 
-[node name="NewGameBtn" type="Button" parent="UICanvas/HUD/TopBar/HBox"]
+[node name="TurnLabel" type="Label" parent="UICanvas/HUD/TopBar/HBox/TurnPill" unique_id=881178377]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
 theme_override_font_sizes/font_size = 13
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn_ui")
-text = "Game Setup"
-
-[node name="TurnLabel" type="Label" parent="UICanvas/HUD"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_top = 48.0
-offset_bottom = 76.0
-grow_horizontal = 2
-theme_override_colors/font_color = Color(1, 1, 1, 0.95)
-theme_override_font_sizes/font_size = 16
-text = "Welcome to Dominoes"
+text = "Domino"
 horizontal_alignment = 1
 
-[node name="BoneyardPanel" type="PanelContainer" parent="UICanvas/HUD"]
+[node name="SpacerRight" type="Control" parent="UICanvas/HUD/TopBar/HBox" unique_id=1131936283]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CenterViewBtn" type="Button" parent="UICanvas/HUD/TopBar/HBox" unique_id=298613640]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_ui")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_ui_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_ui_hover")
+text = "Center"
+
+[node name="NewGameBtn" type="Button" parent="UICanvas/HUD/TopBar/HBox" unique_id=1114313250]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_ui")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_ui_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_ui_hover")
+text = "Setup"
+
+[node name="MenuBtn" type="Button" parent="UICanvas/HUD/TopBar/HBox" unique_id=655506821]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_ui")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_ui_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_ui_hover")
+text = "Menu"
+
+[node name="BoneyardPanel" type="PanelContainer" parent="UICanvas/HUD" unique_id=421779669]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 24.0
-offset_top = -140.0
+offset_top = -132.0
 offset_right = 144.0
 offset_bottom = -72.0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_boneyard")
 
-[node name="VBox" type="VBoxContainer" parent="UICanvas/HUD/BoneyardPanel"]
+[node name="VBox" type="VBoxContainer" parent="UICanvas/HUD/BoneyardPanel" unique_id=592540997]
 layout_mode = 2
+theme_override_constants/separation = 4
 alignment = 1
 
-[node name="CountLabel" type="Label" parent="UICanvas/HUD/BoneyardPanel/VBox"]
+[node name="CountLabel" type="Label" parent="UICanvas/HUD/BoneyardPanel/VBox" unique_id=635051540]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.85, 0.6, 1)
-theme_override_font_sizes/font_size = 13
-text = "Boneyard: 14"
+theme_override_colors/font_color = Color(0.65, 0.7, 0.76, 1)
+theme_override_font_sizes/font_size = 11
+text = "14 left"
 horizontal_alignment = 1
 
-[node name="BoneyardBtn" type="Button" parent="UICanvas/HUD/BoneyardPanel/VBox"]
+[node name="BoneyardBtn" type="Button" parent="UICanvas/HUD/BoneyardPanel/VBox" unique_id=376510202]
 layout_mode = 2
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 12
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_ui")
-text = "Draw Tile"
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_ui_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_ui_hover")
+text = "Draw"
 
-[node name="PassBtn" type="Button" parent="UICanvas/HUD"]
+[node name="PassBtn" type="Button" parent="UICanvas/HUD" unique_id=475610698]
 visible = false
 layout_mode = 1
 anchors_preset = 7
@@ -290,17 +373,17 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -60.0
-offset_top = -180.0
+offset_top = -200.0
 offset_right = 60.0
-offset_bottom = -140.0
+offset_bottom = -164.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 14
 theme_override_styles/normal = SubResource("StyleBoxFlat_pass")
-text = "Pass Turn"
+text = "Pass"
 
-[node name="HumanHandArea" type="Control" parent="UICanvas"]
+[node name="HumanHandArea" type="Control" parent="UICanvas" unique_id=1334464040]
 layout_mode = 3
 anchors_preset = 12
 anchor_top = 1.0
@@ -311,19 +394,21 @@ grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
 
-[node name="TrayBackground" type="Panel" parent="UICanvas/HumanHandArea"]
+[node name="TrayBackground" type="Panel" parent="UICanvas/HumanHandArea" unique_id=144022741]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 160.0
+offset_top = 10.0
 offset_right = -160.0
+offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_hand_tray")
 
-[node name="HandSlots" type="Control" parent="UICanvas/HumanHandArea"]
+[node name="HandSlots" type="Control" parent="UICanvas/HumanHandArea" unique_id=601151645]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -332,111 +417,113 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Badge" type="PanelContainer" parent="UICanvas/HumanHandArea"]
+[node name="Badge" type="PanelContainer" parent="UICanvas/HumanHandArea" unique_id=117128140]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -90.0
-offset_top = -32.0
-offset_right = 90.0
-offset_bottom = -2.0
+offset_left = -75.0
+offset_top = -22.0
+offset_right = 75.0
+offset_bottom = 8.0
 grow_horizontal = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_badge")
 
-[node name="HBox" type="HBoxContainer" parent="UICanvas/HumanHandArea/Badge"]
+[node name="HBox" type="HBoxContainer" parent="UICanvas/HumanHandArea/Badge" unique_id=1398191121]
 layout_mode = 2
+theme_override_constants/separation = 8
 alignment = 1
 
-[node name="NameLabel" type="Label" parent="UICanvas/HumanHandArea/Badge/HBox"]
+[node name="NameLabel" type="Label" parent="UICanvas/HumanHandArea/Badge/HBox" unique_id=1262528319]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
-theme_override_font_sizes/font_size = 13
-text = "👤 You"
+theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
+theme_override_font_sizes/font_size = 12
+text = "You"
 
-[node name="PipsLabel" type="Label" parent="UICanvas/HumanHandArea/Badge/HBox"]
+[node name="PipsLabel" type="Label" parent="UICanvas/HumanHandArea/Badge/HBox" unique_id=1271380268]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
-theme_override_font_sizes/font_size = 13
-text = "(0 pips)"
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 1)
+theme_override_font_sizes/font_size = 12
+text = "0 pips"
 
-[node name="OpponentTopArea" type="Control" parent="UICanvas"]
+[node name="OpponentTopArea" type="Control" parent="UICanvas" unique_id=294294520]
 layout_mode = 3
 anchors_preset = 10
 anchor_right = 1.0
-offset_top = 80.0
-offset_bottom = 140.0
+offset_top = 44.0
+offset_bottom = 76.0
 grow_horizontal = 2
 mouse_filter = 2
 
-[node name="Badge" type="PanelContainer" parent="UICanvas/OpponentTopArea"]
+[node name="Badge" type="PanelContainer" parent="UICanvas/OpponentTopArea" unique_id=619595729]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -90.0
-offset_top = -24.0
-offset_right = 90.0
-offset_bottom = 4.0
+offset_left = -70.0
+offset_top = 2.0
+offset_right = 70.0
+offset_bottom = 30.0
 grow_horizontal = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_badge")
 
-[node name="HBox" type="HBoxContainer" parent="UICanvas/OpponentTopArea/Badge"]
+[node name="HBox" type="HBoxContainer" parent="UICanvas/OpponentTopArea/Badge" unique_id=1577318805]
 layout_mode = 2
+theme_override_constants/separation = 8
 alignment = 1
 
-[node name="NameLabel" type="Label" parent="UICanvas/OpponentTopArea/Badge/HBox"]
+[node name="NameLabel" type="Label" parent="UICanvas/OpponentTopArea/Badge/HBox" unique_id=1839677370]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
-theme_override_font_sizes/font_size = 13
-text = "🤖 Alex"
+theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
+theme_override_font_sizes/font_size = 12
+text = "Alex"
 
-[node name="CountLabel" type="Label" parent="UICanvas/OpponentTopArea/Badge/HBox"]
+[node name="CountLabel" type="Label" parent="UICanvas/OpponentTopArea/Badge/HBox" unique_id=975368053]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
-theme_override_font_sizes/font_size = 13
-text = "🁢 7"
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 1)
+theme_override_font_sizes/font_size = 12
+text = "7 tiles"
 
-[node name="OpponentLeftArea" type="Control" parent="UICanvas"]
+[node name="OpponentLeftArea" type="Control" parent="UICanvas" unique_id=846113307]
 visible = false
 layout_mode = 3
 anchors_preset = 9
 anchor_bottom = 1.0
-offset_top = 140.0
+offset_top = 110.0
 offset_right = 120.0
 offset_bottom = -140.0
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Badge" type="PanelContainer" parent="UICanvas/OpponentLeftArea"]
+[node name="Badge" type="PanelContainer" parent="UICanvas/OpponentLeftArea" unique_id=1287445985]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -50.0
-offset_top = -24.0
-offset_right = 50.0
-offset_bottom = 4.0
+offset_left = -55.0
+offset_right = 55.0
+offset_bottom = 28.0
 grow_horizontal = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_badge")
 
-[node name="HBox" type="HBoxContainer" parent="UICanvas/OpponentLeftArea/Badge"]
+[node name="HBox" type="HBoxContainer" parent="UICanvas/OpponentLeftArea/Badge" unique_id=216863737]
 layout_mode = 2
+theme_override_constants/separation = 6
 alignment = 1
 
-[node name="NameLabel" type="Label" parent="UICanvas/OpponentLeftArea/Badge/HBox"]
+[node name="NameLabel" type="Label" parent="UICanvas/OpponentLeftArea/Badge/HBox" unique_id=2044688069]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
 theme_override_font_sizes/font_size = 12
-text = "🤖 Bob"
+text = "Bob"
 
-[node name="CountLabel" type="Label" parent="UICanvas/OpponentLeftArea/Badge/HBox"]
+[node name="CountLabel" type="Label" parent="UICanvas/OpponentLeftArea/Badge/HBox" unique_id=108815543]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 1)
 theme_override_font_sizes/font_size = 12
-text = "🁢 7"
+text = "7 tiles"
 
-[node name="OpponentRightArea" type="Control" parent="UICanvas"]
+[node name="OpponentRightArea" type="Control" parent="UICanvas" unique_id=81733610]
 visible = false
 layout_mode = 3
 anchors_preset = 11
@@ -444,41 +531,41 @@ anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -120.0
-offset_top = 140.0
+offset_top = 110.0
 offset_bottom = -140.0
 grow_horizontal = 0
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Badge" type="PanelContainer" parent="UICanvas/OpponentRightArea"]
+[node name="Badge" type="PanelContainer" parent="UICanvas/OpponentRightArea" unique_id=577557665]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -50.0
-offset_top = -24.0
-offset_right = 50.0
-offset_bottom = 4.0
+offset_left = -55.0
+offset_right = 55.0
+offset_bottom = 28.0
 grow_horizontal = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_badge")
 
-[node name="HBox" type="HBoxContainer" parent="UICanvas/OpponentRightArea/Badge"]
+[node name="HBox" type="HBoxContainer" parent="UICanvas/OpponentRightArea/Badge" unique_id=1266907088]
 layout_mode = 2
+theme_override_constants/separation = 6
 alignment = 1
 
-[node name="NameLabel" type="Label" parent="UICanvas/OpponentRightArea/Badge/HBox"]
+[node name="NameLabel" type="Label" parent="UICanvas/OpponentRightArea/Badge/HBox" unique_id=1105738330]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
 theme_override_font_sizes/font_size = 12
-text = "🤖 Chloe"
+text = "Chloe"
 
-[node name="CountLabel" type="Label" parent="UICanvas/OpponentRightArea/Badge/HBox"]
+[node name="CountLabel" type="Label" parent="UICanvas/OpponentRightArea/Badge/HBox" unique_id=1837438617]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_colors/font_color = Color(0.92, 0.8, 0.38, 1)
 theme_override_font_sizes/font_size = 12
-text = "🁢 7"
+text = "7 tiles"
 
-[node name="TileLayer" type="Control" parent="UICanvas"]
+[node name="TileLayer" type="Control" parent="UICanvas" unique_id=2119673040]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -487,67 +574,72 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="PlacementPrompt" type="PanelContainer" parent="UICanvas"]
+[node name="PlacementPrompt" type="PanelContainer" parent="UICanvas" unique_id=1341535555]
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -220.0
-offset_top = 40.0
-offset_right = 220.0
-offset_bottom = 100.0
+offset_left = -180.0
+offset_top = 50.0
+offset_right = 180.0
+offset_bottom = 98.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_prompt")
 
-[node name="HBox" type="HBoxContainer" parent="UICanvas/PlacementPrompt"]
+[node name="HBox" type="HBoxContainer" parent="UICanvas/PlacementPrompt" unique_id=1477026856]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 8
 alignment = 1
 
-[node name="BtnPlayLeft" type="Button" parent="UICanvas/PlacementPrompt/HBox"]
+[node name="BtnPlayLeft" type="Button" parent="UICanvas/PlacementPrompt/HBox" unique_id=2142100121]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 13
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_ui")
-text = "◀ Connect Left"
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_ui_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_ui_hover")
+text = "Left"
 
-[node name="BtnPlayRight" type="Button" parent="UICanvas/PlacementPrompt/HBox"]
+[node name="BtnPlayRight" type="Button" parent="UICanvas/PlacementPrompt/HBox" unique_id=1143103969]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 13
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_ui")
-text = "Connect Right ▶"
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_ui_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_ui_hover")
+text = "Right"
 
-[node name="BtnCancel" type="Button" parent="UICanvas/PlacementPrompt/HBox"]
+[node name="BtnCancel" type="Button" parent="UICanvas/PlacementPrompt/HBox" unique_id=1287507030]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 13
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_ui")
-text = "Cancel ✕"
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_ui_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_ui_hover")
+text = "Cancel"
 
-
-[node name="ToastPanel" type="PanelContainer" parent="UICanvas"]
+[node name="ToastPanel" type="PanelContainer" parent="UICanvas" unique_id=336556363]
 visible = false
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -180.0
-offset_top = 150.0
-offset_right = 180.0
-offset_bottom = 190.0
+offset_left = -140.0
+offset_top = 180.0
+offset_right = 140.0
+offset_bottom = 214.0
 grow_horizontal = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_toast")
 
-[node name="ToastLabel" type="Label" parent="UICanvas/ToastPanel"]
+[node name="ToastLabel" type="Label" parent="UICanvas/ToastPanel" unique_id=464617874]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
-theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
+theme_override_font_sizes/font_size = 13
 text = "Notification"
 horizontal_alignment = 1
 
-[node name="GameOverDialog" type="Control" parent="UICanvas"]
+[node name="GameOverDialog" type="Control" parent="UICanvas" unique_id=1037848610]
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -556,60 +648,83 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ColorRect" type="ColorRect" parent="UICanvas/GameOverDialog"]
+[node name="ColorRect" type="ColorRect" parent="UICanvas/GameOverDialog" unique_id=717900110]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.65)
+color = Color(0, 0, 0, 0.6)
 
-[node name="Panel" type="PanelContainer" parent="UICanvas/GameOverDialog"]
-custom_minimum_size = Vector2(440, 320)
+[node name="Panel" type="PanelContainer" parent="UICanvas/GameOverDialog" unique_id=1496642785]
+custom_minimum_size = Vector2(380, 260)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -220.0
-offset_top = -160.0
-offset_right = 220.0
-offset_bottom = 160.0
+offset_left = -190.0
+offset_top = -130.0
+offset_right = 190.0
+offset_bottom = 130.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset = Vector2(190, 130)
 theme_override_styles/panel = SubResource("StyleBoxFlat_gameover")
 
-[node name="VBox" type="VBoxContainer" parent="UICanvas/GameOverDialog/Panel"]
+[node name="VBox" type="VBoxContainer" parent="UICanvas/GameOverDialog/Panel" unique_id=411921711]
 layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="Title" type="Label" parent="UICanvas/GameOverDialog/Panel/VBox"]
+[node name="Title" type="Label" parent="UICanvas/GameOverDialog/Panel/VBox" unique_id=498035533]
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
-text = "ROUND OVER"
+theme_override_colors/font_color = Color(0.96, 0.96, 0.96, 1)
+theme_override_font_sizes/font_size = 20
+text = "Round Won"
 horizontal_alignment = 1
 
-[node name="Details" type="Label" parent="UICanvas/GameOverDialog/Panel/VBox"]
+[node name="Details" type="Label" parent="UICanvas/GameOverDialog/Panel/VBox" unique_id=820123163]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
-theme_override_font_sizes/font_size = 15
-text = "Details"
+theme_override_colors/font_color = Color(0.72, 0.78, 0.84, 1)
+theme_override_font_sizes/font_size = 13
+text = "Scores"
 horizontal_alignment = 1
 
-[node name="BtnPlayAgain" type="Button" parent="UICanvas/GameOverDialog/Panel/VBox"]
+[node name="ButtonsHBox" type="HBoxContainer" parent="UICanvas/GameOverDialog/Panel/VBox" unique_id=1074207866]
 layout_mode = 2
-theme_override_font_sizes/font_size = 15
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn_ui")
-text = "Play Next Round"
+theme_override_constants/separation = 10
+alignment = 1
 
-[node name="BtnChangeSettings" type="Button" parent="UICanvas/GameOverDialog/Panel/VBox"]
+[node name="BtnPlayAgain" type="Button" parent="UICanvas/GameOverDialog/Panel/VBox/ButtonsHBox" unique_id=67645689]
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.08, 0.1, 0.12, 1)
 theme_override_font_sizes/font_size = 14
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn_ui")
-text = "Change Game Setup"
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_primary")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_primary_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_primary_hover")
+text = "Next Round"
 
-[node name="OpponentDialog" parent="UICanvas" instance=ExtResource("3_dlg")]
+[node name="BtnChangeSettings" type="Button" parent="UICanvas/GameOverDialog/Panel/VBox/ButtonsHBox" unique_id=39274497]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_ui")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_ui_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_ui_hover")
+text = "New Game"
+
+[node name="BtnMainMenu" type="Button" parent="UICanvas/GameOverDialog/Panel/VBox/ButtonsHBox" unique_id=2007524247]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_ui")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_ui_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_ui_hover")
+text = "Main Menu"
+
+[node name="OpponentDialog" parent="UICanvas" unique_id=2123251837 instance=ExtResource("3_dlg")]
 visible = false
