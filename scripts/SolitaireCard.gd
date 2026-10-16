@@ -137,7 +137,7 @@ func animate_to(target_pos: Vector2, target_rot: float = 0.0, target_scale: Vect
 	tween.tween_property(self, "rotation", target_rot, duration)
 	tween.tween_property(self, "scale", target_scale, duration)
 
-	z_index = maxi(z_index, 60)
+	z_index = maxi(z_index, 100)
 	tween.chain().tween_callback(func():
 		is_moving = false
 		if final_z >= 0:
@@ -151,6 +151,14 @@ func stop_movement() -> void:
 	if _move_tween and _move_tween.is_valid():
 		_move_tween.kill()
 	is_moving = false
+
+func is_card_moving() -> bool:
+	if not is_moving:
+		return false
+	if _move_tween == null or not _move_tween.is_valid():
+		is_moving = false
+		return false
+	return true
 
 func set_highlight(active: bool) -> void:
 	if highlight_glow != null:
@@ -170,13 +178,13 @@ func _update_hover_state() -> void:
 	if _is_dragging:
 		set_highlight(true)
 		return
-	if is_moving or (is_any_card_dragging and not _is_dragging):
+	if is_card_moving() or (is_any_card_dragging and not _is_dragging):
 		set_highlight(false)
 		return
 	set_highlight(_is_hovered)
 
 func can_drag() -> bool:
-	return is_face_up and pile_type != "stock"
+	return is_face_up and pile_type != "stock" and not is_card_moving()
 
 func cancel_drag() -> void:
 	_is_dragging = false
@@ -196,12 +204,12 @@ func _notification(what: int) -> void:
 func _on_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
+			if is_card_moving():
+				accept_event()
+				return
 			_is_pressed = true
 			_is_dragging = false
 			_press_pos = event.global_position
-			if _move_tween and _move_tween.is_valid():
-				_move_tween.kill()
-				is_moving = false
 			accept_event()
 		else:
 			if _is_dragging:

@@ -81,6 +81,22 @@ func test_main_menu() -> void:
 	menu_inst.btn_card_back_green.pressed.emit()
 	assert(GameSettings.solitaire_card_back.begins_with("cardBack_green"), "Green back button should update settings")
 
+	# Test Deal Type and Difficulty buttons
+	assert(menu_inst.btn_solitaire_winnable != null, "btn_solitaire_winnable missing")
+	assert(menu_inst.btn_solitaire_random != null, "btn_solitaire_random missing")
+	assert(menu_inst.btn_solitaire_diff_easy != null, "btn_solitaire_diff_easy missing")
+	assert(menu_inst.btn_solitaire_diff_standard != null, "btn_solitaire_diff_standard missing")
+
+	menu_inst.btn_solitaire_random.pressed.emit()
+	assert(GameSettings.solitaire_deal_type == "Random", "Random deal button should update settings")
+	menu_inst.btn_solitaire_winnable.pressed.emit()
+	assert(GameSettings.solitaire_deal_type == "Winnable", "Winnable deal button should update settings")
+
+	menu_inst.btn_solitaire_diff_easy.pressed.emit()
+	assert(GameSettings.solitaire_difficulty == "Easy", "Easy diff button should update settings")
+	menu_inst.btn_solitaire_diff_standard.pressed.emit()
+	assert(GameSettings.solitaire_difficulty == "Standard", "Standard diff button should update settings")
+
 	# Test Pyramid Solitaire mode buttons in ModeSelectView
 	assert(menu_inst.btn_pyramid_pass1 != null, "btn_pyramid_pass1 missing")
 	assert(menu_inst.btn_pyramid_pass3 != null, "btn_pyramid_pass3 missing")
@@ -524,8 +540,15 @@ func test_solitaire_mode() -> void:
 	var empty_col: Array = []
 	sol_inst.tableau.append(empty_col)
 	var empty_idx: int = sol_inst.tableau.size() - 1
+	# Standard mode: only King can go to empty tableau slot
+	sol_inst.difficulty = "Standard"
 	assert(sol_inst._can_cards_go_to_tableau(card_red_king, empty_idx), "King can move to empty tableau slot")
-	assert(not sol_inst._can_cards_go_to_tableau(card_black_queen, empty_idx), "Queen cannot move to empty tableau slot")
+	assert(not sol_inst._can_cards_go_to_tableau(card_black_queen, empty_idx), "Queen cannot move to empty tableau slot in Standard")
+
+	# Easy mode: ANY card can move to empty tableau slot!
+	sol_inst.difficulty = "Easy"
+	assert(sol_inst._can_cards_go_to_tableau(card_black_queen, empty_idx), "Any card can move to empty tableau slot in Easy mode")
+	sol_inst.difficulty = "Standard"
 	sol_inst.tableau.pop_back()
 
 	# Test descending alternating color stacking
@@ -538,16 +561,46 @@ func test_solitaire_mode() -> void:
 	assert(not sol_inst._can_cards_go_to_tableau(card_black_jack, test_idx), "Black Jack on Red King should be invalid (rank jump)")
 	sol_inst.tableau.pop_back()
 
-	# 7. Auto-Finish Availability Check
+	# 7. Winnability & Helper Controls
+	assert(sol_inst.btn_difficulty != null, "btn_difficulty missing in HUD")
+	assert(sol_inst.btn_deal_type != null, "btn_deal_type missing in HUD")
+	assert(sol_inst.btn_wand != null, "btn_wand missing in HUD")
+
+	# Test HUD button toggles
+	sol_inst._on_toggle_difficulty()
+	assert(sol_inst.difficulty == "Easy", "Difficulty toggle should switch to Easy")
+	assert(sol_inst.btn_difficulty.text == "Easy", "Button text should be Easy")
+	sol_inst._on_toggle_difficulty()
+	assert(sol_inst.difficulty == "Standard", "Difficulty toggle should switch back to Standard")
+
+	sol_inst._on_toggle_deal_type()
+	assert(sol_inst.deal_type == "Random", "Deal type toggle should switch to Random")
+	sol_inst._on_toggle_deal_type()
+	assert(sol_inst.deal_type == "Winnable", "Deal type toggle should switch back to Winnable")
+
+	# Test Magic Wand Helper & Undo
+	var prev_moves_wand: int = sol_inst.moves_count
+	var prev_undo_wand: int = sol_inst.undo_stack.size()
+	sol_inst._on_wand_clicked()
+	assert(sol_inst.moves_count == prev_moves_wand + 1, "Wand should increment moves count")
+	assert(sol_inst.undo_stack.size() == prev_undo_wand + 1, "Wand should push to undo stack")
+	sol_inst._on_undo_clicked()
+	assert(sol_inst.moves_count == prev_moves_wand + 1, "Move count kept after undo")
+	assert(sol_inst.undo_stack.size() == prev_undo_wand, "Undo should restore stack size")
+
+	# 8. Multi-Cycle Hint Button & Toast
+	sol_inst._on_hint_clicked()
+	assert(sol_inst.toast_panel.visible, "Toast should be visible when Hint is clicked")
+	var first_hint_idx = sol_inst._last_hint_index
+	sol_inst._on_hint_clicked()
+	assert(sol_inst._last_hint_index != first_hint_idx or sol_inst._last_hint_index == -1 or sol_inst._last_hint_index == 0, "Repeated hint should cycle or advance")
+
+	# 9. Auto-Finish Availability Check
 	# Initially, hidden cards exist, so auto-finish is false
 	sol_inst._check_auto_finish_available()
 	assert(not sol_inst.btn_auto_finish.visible, "Auto finish button should not be visible when hidden cards exist")
 
-	# 8. Hint Button & Toast
-	sol_inst._on_hint_clicked()
-	assert(sol_inst.toast_panel.visible, "Toast should be visible when Hint is clicked")
-
-	# 9. Victory Trigger
+	# 10. Victory Trigger
 	sol_inst._trigger_victory()
 	assert(sol_inst.victory_dialog.visible, "Victory dialog should be visible upon victory")
 	assert(sol_inst.is_game_over, "Game should be marked as game over")

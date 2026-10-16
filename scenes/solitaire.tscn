@@ -199,11 +199,18 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_sol")
 
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
+
 [node name="OuterBackground" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -60.0
+offset_top = -60.0
+offset_right = 60.0
+offset_bottom = 60.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -807,6 +814,15 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
+[node name="FxLayer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
 [node name="UICanvas" type="CanvasLayer" parent="."]
 
 [node name="HUD" type="Control" parent="UICanvas"]
@@ -885,6 +901,22 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_btn_ui_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_ui_pressed")
 text = "Draw 1"
 
+[node name="BtnDifficulty" type="Button" parent="UICanvas/HUD/TopBar/HBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_ui")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_ui_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_ui_pressed")
+text = "Standard"
+
+[node name="BtnDealType" type="Button" parent="UICanvas/HUD/TopBar/HBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_ui")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_ui_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_ui_pressed")
+text = "Winnable"
+
 [node name="BtnUndo" type="Button" parent="UICanvas/HUD/TopBar/HBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
@@ -900,6 +932,14 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_btn_ui")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_ui_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_ui_pressed")
 text = "Hint"
+
+[node name="BtnWand" type="Button" parent="UICanvas/HUD/TopBar/HBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_ui")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_ui_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_ui_pressed")
+text = "Wand"
 
 [node name="BtnAutoFinish" type="Button" parent="UICanvas/HUD/TopBar/HBox"]
 visible = false

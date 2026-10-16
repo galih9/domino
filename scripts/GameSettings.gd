@@ -13,6 +13,8 @@ static var sebastopol_match_target: int = 100 # 50, 100, 150, 200 match target p
 # Klondike Solitaire card game configuration
 static var solitaire_draw_count: int = 1 # 1 (Draw 1) or 3 (Draw 3)
 static var solitaire_card_back: String = "cardBack_blue1.png"
+static var solitaire_difficulty: String = "Standard" # "Standard" (Kings only on empty) or "Easy" (any card on empty, 0 recycle penalty)
+static var solitaire_deal_type: String = "Winnable" # "Winnable" (100% solvable deals) or "Random"
 
 # Texas Hold'em Poker configuration
 static var holdem_opponents: int = 3 # 1, 2, or 3 AI opponents
@@ -79,6 +81,12 @@ static var koikoi_times_called: int = 0
 
 static func set_solitaire_draw_count(draw_count: int) -> void:
 	solitaire_draw_count = 3 if draw_count == 3 else 1
+
+static func set_solitaire_difficulty(diff: String) -> void:
+	solitaire_difficulty = "Easy" if diff == "Easy" else "Standard"
+
+static func set_solitaire_deal_type(deal_type: String) -> void:
+	solitaire_deal_type = "Random" if deal_type == "Random" else "Winnable"
 
 static func set_card_back(back_filename: String) -> void:
 	solitaire_card_back = back_filename

@@ -6,6 +6,8 @@ const HanafudaCardData = preload("res://scripts/HanafudaCardData.gd")
 ## Main Menu and Game Mode Selection orchestrator.
 ## Provides polished navigation between Classic Domino, Domino Solitaire,
 ## Texas Hold'em Poker, and Gin Rummy, plus theme customization and game rules.
+## NOTE FOR DEVELOPERS: NEVER ADD EMOJIS TO UI STRINGS/LABELS!
+## Web export does not bundle emoji fonts and shows ugly binary hex boxes instead.
 
 # Views
 @onready var main_menu_view: Control = $MainMenuView
@@ -71,6 +73,10 @@ var current_category: String = "all"
 @onready var btn_start_sebastopol: Button = $ModeSelectView/CardsScroll/CardsHBox/SebastopolCard/VBox/BtnStartSebastopol
 
 # Solitaire controls
+@onready var btn_solitaire_winnable: Button = $ModeSelectView/CardsScroll/CardsHBox/SolitaireCard/VBox/DealTypeHBox/BtnWinnable
+@onready var btn_solitaire_random: Button = $ModeSelectView/CardsScroll/CardsHBox/SolitaireCard/VBox/DealTypeHBox/BtnRandom
+@onready var btn_solitaire_diff_easy: Button = $ModeSelectView/CardsScroll/CardsHBox/SolitaireCard/VBox/DifficultyHBox/BtnEasy
+@onready var btn_solitaire_diff_standard: Button = $ModeSelectView/CardsScroll/CardsHBox/SolitaireCard/VBox/DifficultyHBox/BtnStandard
 @onready var btn_solitaire_draw1: Button = $ModeSelectView/CardsScroll/CardsHBox/SolitaireCard/VBox/DrawModeHBox/BtnDraw1
 @onready var btn_solitaire_draw3: Button = $ModeSelectView/CardsScroll/CardsHBox/SolitaireCard/VBox/DrawModeHBox/BtnDraw3
 @onready var btn_card_back_blue: Button = $ModeSelectView/CardsScroll/CardsHBox/SolitaireCard/VBox/BackStyleHBox/BtnBackBlue
@@ -329,6 +335,10 @@ func _setup_signals() -> void:
 	btn_start_sebastopol.pressed.connect(_launch_sebastopol)
 
 	# Solitaire controls
+	btn_solitaire_winnable.pressed.connect(func(): _set_solitaire_deal_type("Winnable"))
+	btn_solitaire_random.pressed.connect(func(): _set_solitaire_deal_type("Random"))
+	btn_solitaire_diff_easy.pressed.connect(func(): _set_solitaire_difficulty("Easy"))
+	btn_solitaire_diff_standard.pressed.connect(func(): _set_solitaire_difficulty("Standard"))
 	btn_solitaire_draw1.pressed.connect(func(): _set_solitaire_draw_count(1))
 	btn_solitaire_draw3.pressed.connect(func(): _set_solitaire_draw_count(3))
 	btn_card_back_blue.pressed.connect(func(): _set_solitaire_card_back("cardBack_blue1.png"))
@@ -415,6 +425,14 @@ func _update_classic_opponents_ui() -> void:
 	_apply_toggle(btn_classic_opp2, GameSettings.classic_opponents == 2)
 	_apply_toggle(btn_classic_opp3, GameSettings.classic_opponents == 3)
 
+func _set_solitaire_deal_type(deal_type: String) -> void:
+	GameSettings.set_solitaire_deal_type(deal_type)
+	_update_solitaire_options_ui()
+
+func _set_solitaire_difficulty(diff: String) -> void:
+	GameSettings.set_solitaire_difficulty(diff)
+	_update_solitaire_options_ui()
+
 func _set_solitaire_draw_count(draw_count: int) -> void:
 	GameSettings.set_solitaire_draw_count(draw_count)
 	_update_solitaire_options_ui()
@@ -425,6 +443,10 @@ func _set_solitaire_card_back(back_filename: String) -> void:
 	_build_solitaire_banner()
 
 func _update_solitaire_options_ui() -> void:
+	_apply_toggle(btn_solitaire_winnable, GameSettings.solitaire_deal_type == "Winnable")
+	_apply_toggle(btn_solitaire_random, GameSettings.solitaire_deal_type == "Random")
+	_apply_toggle(btn_solitaire_diff_easy, GameSettings.solitaire_difficulty == "Easy")
+	_apply_toggle(btn_solitaire_diff_standard, GameSettings.solitaire_difficulty == "Standard")
 	_apply_toggle(btn_solitaire_draw1, GameSettings.solitaire_draw_count == 1)
 	_apply_toggle(btn_solitaire_draw3, GameSettings.solitaire_draw_count == 3)
 	_apply_toggle(btn_card_back_blue, GameSettings.solitaire_card_back.begins_with("cardBack_blue"))

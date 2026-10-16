@@ -584,7 +584,7 @@ theme_override_constants/separation = 16
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.84, 0.38, 1)
 theme_override_font_sizes/font_size = 22
-text = "MATCH VICTORY! 🏆"
+text = "MATCH VICTORY!"
 horizontal_alignment = 1
 
 [node name="DetailsLabel" type="Label" parent="MatchDialog/Panel/VBox"]

@@ -701,7 +701,7 @@ func _finish_match() -> void:
 	GameSettings.record_koikoi_match(won)
 
 	if player_total_score > ai_total_score:
-		match_title_lbl.text = "MATCH VICTORY! 🏆"
+		match_title_lbl.text = "MATCH VICTORY!"
 		match_title_lbl.add_theme_color_override("font_color", Color(0.96, 0.84, 0.38))
 	elif player_total_score < ai_total_score:
 		match_title_lbl.text = "MATCH DEFEAT"
