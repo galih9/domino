@@ -287,6 +287,7 @@ func start_new_hand() -> void:
 
 	# Initialize Deck
 	_init_deck()
+	SoundManager.play_shuffle()
 
 	# Post Blinds
 	_post_blinds()
@@ -317,6 +318,7 @@ func _init_deck() -> void:
 	deck.shuffle()
 
 func _post_blinds() -> void:
+	SoundManager.play_chips()
 	var active_with_chips: Array[int] = _get_active_player_indices()
 
 	var sb_idx: int
@@ -362,6 +364,7 @@ func _update_pot_display() -> void:
 
 func _deal_hole_cards() -> void:
 	round_info_label.text = "Dealing Hole Cards..."
+	SoundManager.play_deal()
 
 	for i in range(2):
 		for p_idx in _get_active_player_indices():
@@ -499,6 +502,7 @@ func _on_user_fold() -> void:
 	controls_panel.visible = false
 	var human = players[0]
 	human["is_folded"] = true
+	SoundManager.play_card_slide()
 	for c in human["cards"]:
 		c.set_dim(true)
 	_set_player_action(human, "Fold")
@@ -513,8 +517,10 @@ func _on_user_check_call() -> void:
 	var call_amount: int = current_highest_bet - human["current_bet"]
 
 	if call_amount <= 0:
+		SoundManager.play_check()
 		_set_player_action(human, "Check")
 	else:
+		SoundManager.play_chips()
 		var pay: int = mini(call_amount, human["chips"])
 		_deduct_chips(human, pay)
 		_set_player_action(human, "Call $%d" % pay if not human["is_all_in"] else "All-In $%d" % pay)
@@ -572,6 +578,7 @@ func _on_user_confirm_raise() -> void:
 	last_raise_amount = target_total_bet - current_highest_bet
 	current_highest_bet = target_total_bet
 
+	SoundManager.play_chips()
 	_deduct_chips(human, additional)
 	_set_player_action(human, "Raise $%d" % target_total_bet if not human["is_all_in"] else "All-In $%d" % target_total_bet)
 
@@ -648,9 +655,11 @@ func _execute_ai_decision(ai_player: Dictionary) -> void:
 			var bet_amt = clampi(maxi(big_blind, pot / 2), big_blind, chips)
 			current_highest_bet = bet_amt
 			last_raise_amount = bet_amt
+			SoundManager.play_chips()
 			_deduct_chips(ai_player, bet_amt)
 			_set_player_action(ai_player, "Bet $%d" % bet_amt if not ai_player["is_all_in"] else "All-In $%d" % bet_amt)
 		else:
+			SoundManager.play_check()
 			_set_player_action(ai_player, "Check")
 	else:
 		# Facing a bet
@@ -664,15 +673,18 @@ func _execute_ai_decision(ai_player: Dictionary) -> void:
 			var add = raise_to - ai_player["current_bet"]
 			last_raise_amount = raise_to - current_highest_bet
 			current_highest_bet = raise_to
+			SoundManager.play_chips()
 			_deduct_chips(ai_player, add)
 			_set_player_action(ai_player, "Raise $%d" % raise_to if not ai_player["is_all_in"] else "All-In $%d" % raise_to)
 		elif strength >= pot_odds or strength > 0.45 or call_amount <= big_blind:
 			# Call
+			SoundManager.play_chips()
 			_deduct_chips(ai_player, call_cost)
 			_set_player_action(ai_player, "Call $%d" % call_cost if not ai_player["is_all_in"] else "All-In $%d" % call_cost)
 		else:
 			# Fold
 			ai_player["is_folded"] = true
+			SoundManager.play_card_slide()
 			for c in ai_player["cards"]:
 				c.set_dim(true)
 			_set_player_action(ai_player, "Fold")
@@ -707,6 +719,7 @@ func _advance_to_next_stage() -> void:
 			_handle_showdown()
 
 func _deal_community_cards(count: int) -> void:
+	SoundManager.play_card_place()
 	for i in range(count):
 		if community_cards.size() >= community_container.get_child_count():
 			break
@@ -806,6 +819,10 @@ func _handle_showdown() -> void:
 	showdown_banner.visible = true
 
 	var human_won: bool = ("You" in winner_names)
+	if human_won:
+		SoundManager.play_win()
+	else:
+		SoundManager.play_chips()
 	GameSettings.record_holdem_hand(human_won, pot)
 	hand_finished.emit(winner_names, pot)
 
@@ -825,6 +842,10 @@ func _end_hand_single_winner(winner: Dictionary) -> void:
 	showdown_banner.visible = true
 
 	var human_won: bool = winner["is_human"]
+	if human_won:
+		SoundManager.play_win()
+	else:
+		SoundManager.play_chips()
 	GameSettings.record_holdem_hand(human_won, pot)
 	hand_finished.emit([winner["name"]], pot)
 
@@ -835,6 +856,8 @@ func _on_next_hand_clicked() -> void:
 	start_new_hand()
 
 func _show_game_over(player_won: bool, message: String) -> void:
+	if player_won:
+		SoundManager.play_win()
 	game_over_title.text = "TOURNAMENT CHAMPION!" if player_won else "OUT OF CHIPS"
 	game_over_desc.text = message
 	btn_rebuy.text = "Play Again ($%d)" % starting_chips

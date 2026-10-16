@@ -172,6 +172,7 @@ func start_new_game(reuse_seed: bool = false) -> void:
 		all_cards.append(card)
 
 	_update_hud()
+	SoundManager.play_shuffle()
 
 	if is_instant_mode:
 		deal_instantly()
@@ -234,6 +235,7 @@ func deal_instantly() -> void:
 func _deal_cards_animated() -> void:
 	var deck_idx: int = 0
 	var deal_tween: Tween = create_tween()
+	SoundManager.play_deal()
 	var row_sizes: Array[int] = [3, 6, 9, 10]
 	var total_dealt: int = 0
 
@@ -448,10 +450,13 @@ func _play_card_to_waste(card: TriPeaksCard) -> void:
 
 	# Show feedback toast for combos and peaks
 	if peak_bonus > 0:
+		SoundManager.play_chips()
 		var p_name: String = "Peak %d" % (peak_idx_cleared + 1)
 		_show_toast("%s Cleared! +%d pts (Streak x%d)" % [p_name, total_points, current_streak], 2.0)
 	elif current_streak >= 3:
 		_show_toast("STREAK x%d! +%d pts" % [current_streak, total_points], 1.2)
+
+	SoundManager.play_card_place()
 
 	# Animate card to waste
 	var prev_pos: Vector2 = card.position
@@ -499,6 +504,7 @@ func _on_stock_clicked() -> void:
 		return
 
 	if not stock.is_empty():
+		SoundManager.play_draw()
 		var card: TriPeaksCard = stock.pop_back()
 		moves_count += 1
 		var prev_streak: int = current_streak
@@ -532,6 +538,7 @@ func _on_stock_clicked() -> void:
 		if stock_passes_used < max_stock_passes or max_stock_passes >= 900:
 			stock_passes_used += 1
 			moves_count += 1
+			SoundManager.play_shuffle()
 			var prev_streak: int = current_streak
 			current_streak = 0
 
@@ -567,6 +574,7 @@ func _on_stock_clicked() -> void:
 			update_exposed_cards()
 			_update_hud()
 		else:
+			SoundManager.play_invalid()
 			_show_toast("No more stock passes remaining!")
 			_check_no_moves()
 
@@ -575,6 +583,7 @@ func _on_card_drag_started(card: TriPeaksCard, global_pos: Vector2) -> void:
 	if is_game_over or is_dealing or not card.is_exposed:
 		card.cancel_drag()
 		return
+	SoundManager.play_card_slide()
 	_dragging_card = card
 	_drag_orig_pos = card.position
 	_drag_mouse_offset = card.global_position - global_pos
@@ -607,6 +616,7 @@ func _on_undo_clicked() -> void:
 		_show_toast("Nothing to undo!")
 		return
 
+	SoundManager.play_card_slide()
 	var entry: Dictionary = undo_stack.pop_back()
 	var action_type: String = entry.get("type", "")
 
@@ -727,6 +737,7 @@ func _check_victory() -> void:
 func _trigger_victory() -> void:
 	is_game_over = true
 	is_timer_active = false
+	SoundManager.play_win()
 	_add_score(1000) # Grand board clear bonus
 
 	GameSettings.record_tripeaks_game(score, true, moves_count, elapsed_seconds, max_streak)

@@ -90,6 +90,7 @@ func flip(face_up: bool, duration: float = 0.22) -> void:
 	_flip_tween.tween_callback(func():
 		is_face_up = face_up
 		_update_face_visibility()
+		SoundManager.play_flip()
 	)
 	_flip_tween.set_ease(Tween.EASE_OUT)
 	_flip_tween.tween_property(self, "scale:x", 1.0, duration * 0.5)

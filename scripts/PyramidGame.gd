@@ -155,6 +155,7 @@ func start_new_game(reuse_seed: bool = false) -> void:
 		all_cards.append(card)
 
 	_update_hud()
+	SoundManager.play_shuffle()
 
 	if is_instant_mode:
 		deal_instantly()
@@ -203,6 +204,7 @@ func deal_instantly() -> void:
 func _deal_cards_animated() -> void:
 	var deck_idx: int = 0
 	var deal_tween: Tween = create_tween()
+	SoundManager.play_deal()
 
 	# Deal row by row into the pyramid
 	for r in range(7):
@@ -309,6 +311,7 @@ func _on_card_double_clicked(card: PyramidCard) -> void:
 func _select_card(card: PyramidCard) -> void:
 	if selected_card != null and is_instance_valid(selected_card):
 		selected_card.set_selected(false)
+	SoundManager.play_click()
 	selected_card = card
 	selected_card.set_selected(true)
 
@@ -321,6 +324,7 @@ func _deselect_card() -> void:
 func _discard_king(card: PyramidCard) -> void:
 	_deselect_card()
 	moves_count += 1
+	SoundManager.play_match()
 
 	var undo_entry := {
 		"type": "king",
@@ -369,6 +373,7 @@ func _discard_king(card: PyramidCard) -> void:
 func _match_pair(card1: PyramidCard, card2: PyramidCard) -> void:
 	_deselect_card()
 	moves_count += 1
+	SoundManager.play_match()
 
 	var undo_entry := {
 		"type": "pair",
@@ -444,6 +449,7 @@ func _on_stock_clicked() -> void:
 
 	if not stock.is_empty():
 		# Draw 1 card from Stock to Waste
+		SoundManager.play_draw()
 		var card: PyramidCard = stock.pop_back()
 		moves_count += 1
 
@@ -473,6 +479,7 @@ func _on_stock_clicked() -> void:
 		if stock_passes_used < max_stock_passes or max_stock_passes >= 900:
 			stock_passes_used += 1
 			moves_count += 1
+			SoundManager.play_shuffle()
 
 			var recycled_cards: Array[PyramidCard] = []
 			recycled_cards.append_array(waste)
@@ -501,6 +508,7 @@ func _on_stock_clicked() -> void:
 			update_exposed_cards()
 			_update_hud()
 		else:
+			SoundManager.play_invalid()
 			_show_toast("No more stock passes left!")
 
 # Drag and Drop Implementation
@@ -508,6 +516,7 @@ func _on_card_drag_started(card: PyramidCard, global_pos: Vector2) -> void:
 	if is_game_over or is_dealing or not card.is_exposed:
 		card.cancel_drag()
 		return
+	SoundManager.play_card_slide()
 	_dragging_card = card
 	_drag_orig_pos = card.position
 	_drag_mouse_offset = card.global_position - global_pos
@@ -550,6 +559,7 @@ func _on_undo_clicked() -> void:
 		_show_toast("Nothing to undo!")
 		return
 
+	SoundManager.play_card_slide()
 	_deselect_card()
 	var entry: Dictionary = undo_stack.pop_back()
 	var action_type: String = entry.get("type", "")
@@ -701,6 +711,7 @@ func _check_victory() -> void:
 func _trigger_victory() -> void:
 	is_game_over = true
 	is_timer_active = false
+	SoundManager.play_win()
 	_add_score(500) # Full pyramid cleared bonus
 
 	GameSettings.record_pyramid_game(score, true, moves_count, elapsed_seconds)

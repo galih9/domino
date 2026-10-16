@@ -114,6 +114,7 @@ func flip_to(face_up: bool, duration: float = 0.22) -> Tween:
 	tween.tween_property(self, "scale:x", 0.0, duration * 0.5)
 	tween.tween_callback(func():
 		_update_face_visibility()
+		SoundManager.play_flip()
 	)
 	tween.set_ease(Tween.EASE_OUT)
 	tween.tween_property(self, "scale:x", orig_scale_x, duration * 0.5)

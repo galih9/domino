@@ -105,6 +105,7 @@ func flip_to(face_up: bool, duration: float = 0.32) -> void:
 	_flip_tween.tween_property(self, "scale:x", 0.0, duration * 0.5)
 	_flip_tween.tween_callback(func():
 		_update_texture()
+		SoundManager.play_flip()
 	)
 
 	# Expand back to target scale
@@ -113,7 +114,7 @@ func flip_to(face_up: bool, duration: float = 0.32) -> void:
 
 ## Smoothly moves the tile to a global/local position with rotation and scaling
 func animate_to(target_pos: Vector2, target_rot: float = 0.0, target_scale: Vector2 = Vector2.ONE,
-				duration: float = 0.38, _play_sound: bool = false, _arc_height: float = 24.0, final_z: int = 0) -> Tween:
+				duration: float = 0.38, play_sound: bool = false, _arc_height: float = 24.0, final_z: int = 0) -> Tween:
 	if _move_tween and _move_tween.is_valid():
 		_move_tween.kill()
 
@@ -134,6 +135,8 @@ func animate_to(target_pos: Vector2, target_rot: float = 0.0, target_scale: Vect
 	z_index = maxi(z_index, 50)
 	tween.chain().tween_callback(func():
 		z_index = final_z
+		if play_sound:
+			SoundManager.play_tile_place()
 	)
 	_move_tween = tween
 	return tween

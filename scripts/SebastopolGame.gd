@@ -437,6 +437,7 @@ func start_shuffle_phase() -> void:
 	current_state = State.SHUFFLE
 	is_animating = true
 	turn_label.text = "Shuffling"
+	SoundManager.play_shuffle()
 
 	boneyard.shuffle()
 
@@ -473,6 +474,7 @@ func start_deal_phase() -> void:
 			var target_pos: Vector2 = _get_player_hand_slot_position(p_idx, round_num, tiles_per_player)
 			tile.hand_base_pos = target_pos
 			var target_scale: Vector2 = Vector2.ONE if p_idx == 0 else Vector2(0.65, 0.65)
+			SoundManager.play_deal()
 			tile.animate_to(target_pos, 0.0, target_scale, 0.2, false, 24.0, round_num)
 			await get_tree().create_timer(0.05).timeout
 
@@ -607,6 +609,7 @@ func _on_tile_clicked(tile: DominoTile) -> void:
 	if tile.owner_id != 0 or not tile.is_playable:
 		return
 
+	SoundManager.play_click()
 	selected_hand_tile = tile
 
 	# Opening 6-6 placement
@@ -717,6 +720,7 @@ func _start_ai_turn() -> void:
 		_execute_tile_placement(tile, arm_choice)
 	else:
 		# AI has no valid move; pass
+		SoundManager.play_pass()
 		show_toast("%s passed" % ai.name)
 		consecutive_passes += 1
 		if not is_instant_mode:
@@ -728,6 +732,7 @@ func _on_pass_clicked() -> void:
 		return
 	is_animating = true
 	pass_btn.visible = false
+	SoundManager.play_pass()
 	show_toast("You passed")
 	consecutive_passes += 1
 	if not is_instant_mode:
@@ -826,18 +831,22 @@ func _check_match_status_and_display(round_winner: Player, outcome_subtitle: Str
 		match_over = true
 		GameSettings.record_sebastopol_match(match_winner.is_human)
 		if match_winner.is_human:
+			SoundManager.play_win()
 			winner_title.text = "MATCH VICTORY!"
 			winner_title.modulate = Color(0.95, 0.85, 0.35, 1.0)
 		else:
+			SoundManager.play_chips()
 			winner_title.text = "%s Wins the Match!" % match_winner.name
 			winner_title.modulate = Color(0.95, 0.85, 0.35, 1.0)
 		btn_play_again.text = "New Match"
 	else:
 		match_over = false
 		if round_winner.is_human:
+			SoundManager.play_win()
 			winner_title.text = "Round Won!"
 			winner_title.modulate = Color(0.92, 0.8, 0.38, 1.0)
 		else:
+			SoundManager.play_chips()
 			winner_title.text = "%s Won Round" % round_winner.name
 			winner_title.modulate = Color(0.92, 0.8, 0.38, 1.0)
 		btn_play_again.text = "Next Round"

@@ -269,6 +269,7 @@ func start_new_game(reuse_seed: bool = false) -> void:
 	seed(current_seed)
 
 	_generate_deck()
+	SoundManager.play_shuffle()
 	deal_game()
 
 func _clear_all_cards() -> void:
@@ -305,6 +306,7 @@ func _generate_deck() -> void:
 
 func deal_game() -> void:
 	var deck: Array[SolitaireCard] = all_cards.duplicate()
+	SoundManager.play_deal()
 
 	# Deal Tableau (7 columns)
 	for col in range(7):
@@ -499,6 +501,7 @@ func _draw_from_stock() -> void:
 		if waste.is_empty():
 			return
 		# Recycle waste back into stock
+		SoundManager.play_shuffle()
 		undo_stack.append({
 			"type": "recycle",
 			"count": waste.size(),
@@ -524,6 +527,7 @@ func _draw_from_stock() -> void:
 	# Draw cards from stock to waste
 	var drawn: Array[SolitaireCard] = []
 	var count_to_draw: int = mini(draw_count, stock.size())
+	SoundManager.play_draw()
 
 	for i in range(count_to_draw):
 		var card: SolitaireCard = stock.pop_back()
@@ -650,6 +654,7 @@ func _execute_move_to_foundation(card: SolitaireCard, f_idx: int) -> void:
 	card.pile_type = "foundation"
 	card.pile_index = f_idx
 	foundations[f_idx].append(card)
+	SoundManager.play_match()
 
 	score += 10
 	moves_count += 1
@@ -754,6 +759,7 @@ func _execute_move_to_tableau(moving_cards: Array[SolitaireCard], from_type: Str
 		c.pile_index = to_col
 		tableau[to_col].append(c)
 
+	SoundManager.play_card_place()
 	moves_count += 1
 	undo_stack.append({
 		"type": "move",
@@ -811,6 +817,7 @@ func _on_card_drag_started(card: SolitaireCard, mouse_pos: Vector2) -> void:
 		card.cancel_drag()
 		return
 
+	SoundManager.play_card_slide()
 	_is_dragging = true
 	_drag_mouse_offset = card.global_position - mouse_pos
 	if _drag_hovered_slot != null:
@@ -959,6 +966,7 @@ func _on_undo_clicked() -> void:
 	if undo_stack.is_empty() or is_auto_finishing:
 		return
 
+	SoundManager.play_card_slide()
 	var rec: Dictionary = undo_stack.pop_back()
 	var act: String = rec["type"]
 
@@ -1587,6 +1595,7 @@ func _check_victory() -> void:
 func _trigger_victory() -> void:
 	is_game_over = true
 	is_timer_active = false
+	SoundManager.play_win()
 
 	GameSettings.record_solitaire_game(score, true, moves_count, elapsed_seconds)
 	game_won.emit()
@@ -1630,6 +1639,7 @@ func show_toast(msg: String) -> void:
 var _shake_tween: Tween = null
 
 func shake_camera(intensity: float = 5.0, duration: float = 0.22) -> void:
+	SoundManager.play_invalid()
 	if camera == null:
 		return
 	if _shake_tween and _shake_tween.is_valid():

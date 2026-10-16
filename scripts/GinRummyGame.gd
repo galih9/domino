@@ -132,6 +132,7 @@ func _setup_signals() -> void:
 	btn_game_over_menu.pressed.connect(_on_menu_clicked)
 
 func _on_menu_clicked() -> void:
+	SoundManager.play_click()
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 
 func start_new_match() -> void:
@@ -184,8 +185,10 @@ func _create_shuffled_deck() -> void:
 		for r in range(1, 14): # 1 to 13 (Ace to King)
 			deck.append({ "suit": s, "rank": r })
 	deck.shuffle()
+	SoundManager.play_shuffle()
 
 func _deal_cards() -> void:
+	SoundManager.play_deal()
 	# Deal 10 cards to each player
 	var player_data: Array[Dictionary] = []
 	var ai_data: Array[Dictionary] = []
@@ -289,6 +292,7 @@ func _reposition_ai_cards(animated: bool = true) -> void:
 			card.position = target_pos
 
 func _sort_player_hand_by_rank() -> void:
+	SoundManager.play_card_slide()
 	player_cards.sort_custom(func(a, b):
 		if a.rank != b.rank:
 			return a.rank < b.rank
@@ -298,6 +302,7 @@ func _sort_player_hand_by_rank() -> void:
 	_reposition_player_cards(true)
 
 func _sort_player_hand_by_suit() -> void:
+	SoundManager.play_card_slide()
 	player_cards.sort_custom(func(a, b):
 		if a.suit != b.suit:
 			return a.suit < b.suit
@@ -412,6 +417,7 @@ func _on_player_card_clicked(card: GinRummyCard) -> void:
 	if not is_player_turn or current_phase != TurnPhase.DISCARD:
 		return
 
+	SoundManager.play_click()
 	if selected_card == card:
 		# Unselect
 		card.set_selected(false)
@@ -444,6 +450,7 @@ func _on_player_draw_stock() -> void:
 	if not is_player_turn or current_phase != TurnPhase.DRAW or stock_pile.is_empty():
 		return
 
+	SoundManager.play_draw()
 	var drawn_data: Dictionary = stock_pile.pop_back()
 	var card_inst: GinRummyCard = GinRummyCardScene.instantiate()
 	card_layer.add_child(card_inst)
@@ -463,6 +470,7 @@ func _on_player_draw_discard() -> void:
 	if not is_player_turn or current_phase != TurnPhase.DRAW or discard_pile.is_empty():
 		return
 
+	SoundManager.play_draw()
 	var drawn_data: Dictionary = discard_pile.pop_back()
 	var card_inst: GinRummyCard = GinRummyCardScene.instantiate()
 	card_layer.add_child(card_inst)
@@ -482,6 +490,7 @@ func _on_player_discard_selected() -> void:
 	if selected_card == null or not is_player_turn or current_phase != TurnPhase.DISCARD:
 		return
 
+	SoundManager.play_card_place()
 	var card_to_discard = selected_card
 	selected_card = null
 	player_cards.erase(card_to_discard)
@@ -505,11 +514,13 @@ func _on_player_discard_selected() -> void:
 func _on_player_knock() -> void:
 	if selected_card == null:
 		return
+	SoundManager.play_knock()
 	_finalize_hand_with_knock(true, false)
 
 func _on_player_declare_gin() -> void:
 	if selected_card == null:
 		return
+	SoundManager.play_win()
 	_finalize_hand_with_knock(true, true)
 
 func _finalize_hand_with_knock(player_is_knocker: bool, is_gin: bool) -> void:

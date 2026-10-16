@@ -294,6 +294,7 @@ func start_shuffle_phase() -> void:
 	current_state = State.SHUFFLE
 	is_animating = true
 	turn_label.text = "Shuffling"
+	SoundManager.play_shuffle()
 
 	boneyard.shuffle()
 
@@ -336,6 +337,7 @@ func start_deal_phase() -> void:
 			var target_pos: Vector2 = _get_player_hand_slot_position(p_idx, round_num, tiles_per_player)
 			tile.hand_base_pos = target_pos
 			var target_scale: Vector2 = Vector2.ONE if p_idx == 0 else Vector2(0.65, 0.65)
+			SoundManager.play_deal()
 			tile.animate_to(target_pos, 0.0, target_scale, 0.22, false, 24.0, round_num)
 			await get_tree().create_timer(0.06).timeout
 
@@ -455,6 +457,7 @@ func _on_tile_clicked(tile: DominoTile) -> void:
 	if tile.owner_id != 0 or not tile.is_playable:
 		return
 
+	SoundManager.play_click()
 	selected_hand_tile = tile
 
 	if board.is_empty():
@@ -539,6 +542,7 @@ func _start_ai_turn() -> void:
 		if boneyard.size() > 0:
 			_ai_draw_tile(ai)
 		else:
+			SoundManager.play_pass()
 			show_toast("%s passed" % ai.name)
 			consecutive_passes += 1
 			await get_tree().create_timer(0.8).timeout
@@ -552,6 +556,7 @@ func _ai_draw_tile(ai: AIPlayer) -> void:
 	_update_all_player_badges()
 
 	show_toast("%s drew" % ai.name)
+	SoundManager.play_draw()
 
 	var target_pos: Vector2 = _get_player_hand_slot_position(current_player_idx, ai.hand_size() - 1, ai.hand_size())
 	tile.animate_to(target_pos, 0.0, Vector2(0.65, 0.65), 0.25, false, 24.0, ai.hand_size() - 1)
@@ -574,6 +579,7 @@ func _ai_draw_tile(ai: AIPlayer) -> void:
 			await get_tree().create_timer(0.4).timeout
 			_ai_draw_tile(ai)
 		else:
+			SoundManager.play_pass()
 			show_toast("%s passed" % ai.name)
 			consecutive_passes += 1
 			await get_tree().create_timer(0.8).timeout
@@ -589,6 +595,7 @@ func _on_boneyard_clicked() -> void:
 
 	var human: Player = players[0]
 	if human.has_playable(board):
+		SoundManager.play_invalid()
 		show_toast("Play from hand")
 		return
 
@@ -603,6 +610,7 @@ func _on_boneyard_clicked() -> void:
 
 	_arrange_all_hands()
 
+	SoundManager.play_draw()
 	var target_pos: Vector2 = _get_player_hand_slot_position(0, human.hand_size() - 1, human.hand_size())
 	tile.hand_base_pos = target_pos
 	tile.animate_to(target_pos, 0.0, Vector2.ONE, 0.28, false, 24.0, 5)
@@ -620,6 +628,7 @@ func _on_pass_clicked() -> void:
 		return
 	is_animating = true
 	pass_btn.visible = false
+	SoundManager.play_pass()
 	show_toast("Passed")
 	consecutive_passes += 1
 	await get_tree().create_timer(0.6).timeout
@@ -656,9 +665,11 @@ func _end_round_winner(winner: Player, _is_blocked: bool) -> void:
 	winner.round_score += points_won
 
 	if winner.is_human:
+		SoundManager.play_win()
 		winner_title.text = "Victory"
 		winner_title.modulate = Color(0.92, 0.8, 0.38, 1.0)
 	else:
+		SoundManager.play_chips()
 		winner_title.text = "%s Wins" % winner.name
 		winner_title.modulate = Color(0.92, 0.8, 0.38, 1.0)
 
@@ -699,9 +710,11 @@ func _end_round_blocked() -> void:
 	winner.round_score += points_won
 
 	if winner.is_human:
+		SoundManager.play_win()
 		winner_title.text = "Victory (Blocked)"
 		winner_title.modulate = Color(0.92, 0.8, 0.38, 1.0)
 	else:
+		SoundManager.play_chips()
 		winner_title.text = "%s Wins (Blocked)" % winner.name
 		winner_title.modulate = Color(0.92, 0.8, 0.38, 1.0)
 
