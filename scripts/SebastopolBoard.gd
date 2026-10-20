@@ -242,20 +242,28 @@ func _place_spinner(tile: DominoTile) -> Dictionary:
 
 	return {"position": pos, "rotation": rot, "arm": "center"}
 
-## Places a tile extending from the specified arm
-func _place_arm_tile(tile: DominoTile, arm: String) -> Dictionary:
+## Computes preview target position and rotation without modifying board state.
+func get_placement_preview(tile: DominoTile, arm_choice: String) -> Dictionary:
+	if is_empty() or arm_choice == "center" or arm_choice == "first":
+		return {
+			"position": Vector2.ZERO,
+			"rotation": 0.0,
+			"arm": "center"
+		}
+
 	var is_dbl: bool = tile.is_double()
-	var matching_val: int = open_vals[arm]
+	var matching_val: int = open_vals.get(arm_choice, -1)
 	var new_open_val: int = tile.get_other_val(matching_val)
 
-	var dir: Vector2 = directions[arm]
-	var anchor: Vector2 = anchor_positions[arm]
+	var dir: Vector2 = directions.get(arm_choice, Vector2.UP)
+	var anchor: Vector2 = anchor_positions.get(arm_choice, Vector2.ZERO)
 
 	# Handle snaking turns for each arm when reaching bounds
-	dir = _calculate_snake_turn(arm, anchor, dir)
+	dir = _calculate_snake_turn(arm_choice, anchor, dir)
 
 	var pos: Vector2 = Vector2.ZERO
 	var rot: float = 0.0
+	var next_anchor: Vector2 = Vector2.ZERO
 
 	if is_dbl:
 		# Double tile placed crosswise (perpendicular to travel direction)
@@ -265,48 +273,55 @@ func _place_arm_tile(tile: DominoTile, arm: String) -> Dictionary:
 			rot = 0.0 # Vertical crosswise when traveling horizontally
 		else:
 			rot = PI * 0.5 # Horizontal crosswise when traveling vertically
-		anchor = pos + dir * (TILE_WIDTH * 0.5 + SPACING)
+		next_anchor = pos + dir * (TILE_WIDTH * 0.5 + SPACING)
 	else:
 		# Lengthwise along travel direction
 		var center_offset: float = TILE_LENGTH * 0.5
 		pos = anchor + dir * center_offset
 
 		if dir == Vector2.UP:
-			# Traveling UP: matching connects DOWN, new_open faces UP
 			if tile.top_val == new_open_val:
-				rot = 0.0 # top is UP, bottom is DOWN
+				rot = 0.0
 			else:
-				rot = PI # bottom is UP, top is DOWN
+				rot = PI
 		elif dir == Vector2.DOWN:
-			# Traveling DOWN: matching connects UP, new_open faces DOWN
 			if tile.top_val == matching_val:
-				rot = 0.0 # top connects UP, bottom is DOWN
+				rot = 0.0
 			else:
 				rot = PI
 		elif dir == Vector2.RIGHT:
-			# Traveling RIGHT: matching connects LEFT, new_open faces RIGHT
-			# rot = -PI*0.5 -> top is LEFT, bottom is RIGHT
-			# rot = PI*0.5  -> top is RIGHT, bottom is LEFT
 			if tile.top_val == matching_val:
 				rot = -PI * 0.5
 			else:
 				rot = PI * 0.5
 		elif dir == Vector2.LEFT:
-			# Traveling LEFT: matching connects RIGHT, new_open faces LEFT
 			if tile.top_val == new_open_val:
 				rot = -PI * 0.5
 			else:
 				rot = PI * 0.5
 
-		anchor = pos + dir * (TILE_LENGTH * 0.5 + SPACING)
+		next_anchor = pos + dir * (TILE_LENGTH * 0.5 + SPACING)
+
+	return {
+		"position": pos,
+		"rotation": rot,
+		"arm": arm_choice,
+		"dir": dir,
+		"new_open_val": new_open_val,
+		"next_anchor": next_anchor
+	}
+
+## Places a tile extending from the specified arm
+func _place_arm_tile(tile: DominoTile, arm: String) -> Dictionary:
+	var preview: Dictionary = get_placement_preview(tile, arm)
 
 	# Update board state for this arm
-	open_vals[arm] = new_open_val
-	anchor_positions[arm] = anchor
-	directions[arm] = dir
+	open_vals[arm] = preview["new_open_val"]
+	anchor_positions[arm] = preview["next_anchor"]
+	directions[arm] = preview["dir"]
 	arm_tiles[arm].append(tile)
 
-	return {"position": pos, "rotation": rot, "arm": arm}
+	return {"position": preview["position"], "rotation": preview["rotation"], "arm": arm}
 
 ## Snake turn calculations keeping the 4 branches well organized
 func _calculate_snake_turn(arm: String, anchor: Vector2, current_dir: Vector2) -> Vector2:

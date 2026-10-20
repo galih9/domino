@@ -12,6 +12,7 @@ signal tile_hovered(tile: DominoTile, is_hovering: bool)
 @export var is_playable: bool = false
 @export var is_interactable: bool = true
 
+var is_selected: bool = false
 var owner_id: int = -1 # 0: User, 1..3: AI, -1: Table/Boneyard
 var base_scale: Vector2 = Vector2.ONE
 var hand_base_pos: Vector2 = Vector2.ZERO
@@ -174,6 +175,8 @@ func animate_shuffle(center_pos: Vector2, delay: float = 0.0, duration: float = 
 ## Set playable state (glow / dim)
 func set_playable(playable: bool) -> void:
 	is_playable = playable
+	if not is_playable:
+		is_selected = false
 	_update_glow(is_playable)
 	if is_playable:
 		modulate = Color(1.0, 1.0, 1.0, 1.0)
@@ -183,6 +186,22 @@ func set_playable(playable: bool) -> void:
 			modulate = Color(0.75, 0.75, 0.75, 0.95)
 		else:
 			modulate = Color(1.0, 1.0, 1.0, 1.0)
+
+## Set selected state (lifts higher in hand when player selects to choose arm/end)
+func set_selected(selected: bool) -> void:
+	is_selected = selected
+	if is_selected:
+		var lift_pos: Vector2 = hand_base_pos + Vector2(0, -20)
+		create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT).tween_property(self, "position", lift_pos, 0.15)
+		z_index = 12
+	else:
+		if not _is_hovered:
+			create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT).tween_property(self, "position", hand_base_pos, 0.15)
+			z_index = 0
+		else:
+			var lift_pos: Vector2 = hand_base_pos + Vector2(0, -16)
+			create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT).tween_property(self, "position", lift_pos, 0.15)
+			z_index = 10
 
 func _update_glow(active: bool) -> void:
 	if glow_border == null:
@@ -208,7 +227,7 @@ func _on_mouse_entered() -> void:
 	if owner_id != 0:
 		return
 	_is_hovered = true
-	if is_playable:
+	if is_playable and not is_selected:
 		# Slight lift up effect in hand
 		var lift_pos: Vector2 = hand_base_pos + Vector2(0, -16)
 		create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT).tween_property(self, "position", lift_pos, 0.15)
@@ -225,7 +244,7 @@ func _on_mouse_exited() -> void:
 	if owner_id != 0:
 		return
 	_is_hovered = false
-	if is_playable:
+	if is_playable and not is_selected:
 		create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT).tween_property(self, "position", hand_base_pos, 0.15)
 		z_index = 0
 	tile_hovered.emit(self, false)

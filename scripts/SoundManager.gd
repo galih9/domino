@@ -26,12 +26,9 @@ const SFX_CHIPS: Array[AudioStream] = [
 ]
 
 const SFX_SHUFFLE: Array[AudioStream] = [
-	preload("res://assets/Sfx/diceShuffle1.ogg")
-]
-
-const SFX_DICE_THROW: Array[AudioStream] = [
-	preload("res://assets/Sfx/diceThrow1.ogg"),
-	preload("res://assets/Sfx/diceThrow2.ogg")
+	preload("res://assets/Sfx/cardSlide1.ogg"),
+	preload("res://assets/Sfx/cardSlide2.ogg"),
+	preload("res://assets/Sfx/cardSlide3.ogg")
 ]
 
 var _player_pool: Array[AudioStreamPlayer] = []
@@ -106,7 +103,7 @@ static func play_card_slide(volume_db: float = -2.0) -> void:
 
 static func play_tile_place(volume_db: float = 0.0) -> void:
 	var mgr := _ensure_instance()
-	if mgr: mgr._play_random(SFX_DICE_THROW, volume_db, 0.94, 1.06)
+	if mgr: mgr._play_random(SFX_CARD_PLACE, volume_db, 0.94, 1.06)
 
 static func play_chips(volume_db: float = -2.0) -> void:
 	var mgr := _ensure_instance()
@@ -116,13 +113,9 @@ static func play_shuffle(volume_db: float = -1.0) -> void:
 	var mgr := _ensure_instance()
 	if mgr: mgr._play_random(SFX_SHUFFLE, volume_db, 0.98, 1.02)
 
-static func play_dice_throw(volume_db: float = 0.0) -> void:
-	var mgr := _ensure_instance()
-	if mgr: mgr._play_random(SFX_DICE_THROW, volume_db, 0.95, 1.05)
-
 static func play_knock(volume_db: float = 0.0) -> void:
 	var mgr := _ensure_instance()
-	if mgr: mgr._play_random(SFX_DICE_THROW, volume_db, 0.84, 0.92)
+	if mgr: mgr._play_random(SFX_CARD_PLACE, volume_db, 0.84, 0.92)
 
 static func play_deal(volume_db: float = -2.0) -> void:
 	play_card_slide(volume_db)
@@ -146,7 +139,7 @@ static func play_match(volume_db: float = -1.0) -> void:
 
 static func play_invalid(volume_db: float = -1.0) -> void:
 	var mgr := _ensure_instance()
-	if mgr: mgr._play_random(SFX_DICE_THROW, volume_db, 0.72, 0.78)
+	if mgr: mgr._play_random(SFX_CARD_SLIDE, volume_db, 0.72, 0.78)
 
 static func play_pass(volume_db: float = 0.0) -> void:
 	play_knock(volume_db)

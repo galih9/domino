@@ -668,6 +668,39 @@ func test_classic_mode() -> void:
 	assert(game_inst.new_game_btn != null, "NewGameBtn missing in Classic TopBar")
 	assert(game_inst.btn_main_menu != null, "BtnMainMenu missing in GameOverDialog")
 
+	# Test placement preview on DominoBoard
+	var test_t1: DominoTile = TileScene.instantiate()
+	test_t1.setup(6, 5, true)
+	var prev_first: Dictionary = game_inst.board.get_placement_preview(test_t1, "first")
+	assert(prev_first["position"] == Vector2.ZERO, "First tile preview should be Vector2.ZERO")
+	game_inst.board.place_tile(test_t1, "first")
+
+	var test_t2: DominoTile = TileScene.instantiate()
+	test_t2.setup(5, 3, true)
+	var prev_left: Dictionary = game_inst.board.get_placement_preview(test_t2, "left")
+	assert(prev_left.has("position") and prev_left.has("rotation"), "Preview left must include position and rotation")
+	var prev_right: Dictionary = game_inst.board.get_placement_preview(test_t2, "right")
+	assert(prev_right.has("position") and prev_right.has("rotation"), "Preview right must include position and rotation")
+
+	# Test glowing placement slots on board when multiple ends exist
+	var test_hand_tile: DominoTile = TileScene.instantiate()
+	test_hand_tile.setup(5, 6, true, 0)
+	game_inst.tile_layer.add_child(test_hand_tile)
+	game_inst.players[0].add_tile(test_hand_tile)
+	test_hand_tile.set_playable(true)
+
+	game_inst._show_placement_slots(test_hand_tile, ["left", "right"])
+	assert(game_inst._active_placement_slots.size() == 2, "Must spawn 2 glowing placement slots on board for Left and Right")
+	assert(game_inst.placement_prompt.visible == false, "Placement prompt panel with text buttons must remain hidden")
+	for s in game_inst._active_placement_slots:
+		assert(s.get_parent() == game_inst.board, "Glowing slot must be child of board")
+
+	# Test clicking slot commits move
+	game_inst.selected_hand_tile = test_hand_tile
+	game_inst._commit_player_move("left")
+	assert(game_inst._active_placement_slots.size() == 0, "Slots must be cleared after move committed")
+	assert(game_inst.placement_prompt.visible == false, "Prompt panel must remain hidden")
+
 	# Test all domino themes load properly
 	for th in ["Light", "Dark", "Gingerbread", "Hearts", "Stars"]:
 		var tex: Texture2D = ThemeManager.get_tile_texture(6, 6, th)

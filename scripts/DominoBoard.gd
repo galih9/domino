@@ -142,127 +142,158 @@ func _place_first_tile(tile: DominoTile) -> Dictionary:
 
 	return {"position": pos, "rotation": rot}
 
-func _place_left_tile(tile: DominoTile) -> Dictionary:
-	var is_dbl: bool = tile.is_double()
-	var matching_val: int = open_left_val
-	var new_open_val: int = tile.get_other_val(matching_val)
-
-	# Check for snake turn if reaching left boundary
-	if left_anchor_pos.x <= MIN_EXTENT_X and left_dir == Vector2.LEFT:
-		left_dir = Vector2.UP
-	elif left_anchor_pos.y <= -200.0 and left_dir == Vector2.UP:
-		left_dir = Vector2.RIGHT
-	elif left_anchor_pos.x >= MAX_EXTENT_X and left_dir == Vector2.RIGHT:
-		left_dir = Vector2.UP
-
-	var pos: Vector2 = Vector2.ZERO
-	var rot: float = 0.0
-
-	if is_dbl:
-		# Double is placed crosswise (perpendicular to movement direction)
-		var center_offset: float = TILE_WIDTH * 0.5
-		pos = left_anchor_pos + left_dir * center_offset
-		if left_dir.x != 0:
-			rot = 0.0 # Vertical crosswise
+## Computes preview target position and rotation without modifying board state.
+func get_placement_preview(tile: DominoTile, end_choice: String) -> Dictionary:
+	if is_empty() or end_choice == "first":
+		var pos: Vector2 = Vector2.ZERO
+		var rot: float = 0.0
+		if tile.is_double():
+			rot = 0.0
 		else:
-			rot = PI * 0.5 # Horizontal crosswise
-		left_anchor_pos = pos + left_dir * (TILE_WIDTH * 0.5 + SPACING)
-	else:
-		# Normal tile placed lengthwise
-		var center_offset: float = TILE_LENGTH * 0.5
-		pos = left_anchor_pos + left_dir * center_offset
+			rot = -PI * 0.5
+		return {"position": pos, "rotation": rot, "end": "first"}
+	elif end_choice == "left":
+		var is_dbl: bool = tile.is_double()
+		var matching_val: int = open_left_val
+		var new_open_val: int = tile.get_other_val(matching_val)
 
-		if left_dir == Vector2.LEFT:
-			# Traveling left: matching value connects on right, new_open_val on left
-			# Texture: top_val is index 0 (top), bottom_val is index 1 (bottom).
-			# If rot = -PI/2: top is left, bottom is right.
-			# If rot = PI/2: top is right, bottom is left.
-			if tile.top_val == new_open_val:
-				rot = -PI * 0.5 # top (new_open) on left, bottom (matching) on right
-			else:
-				rot = PI * 0.5 # top (matching) on right, bottom (new_open) on left
-		elif left_dir == Vector2.RIGHT:
-			# Traveling right
-			if tile.top_val == new_open_val:
-				rot = PI * 0.5 # top (new_open) on right, bottom on left
-			else:
-				rot = -PI * 0.5
-		elif left_dir == Vector2.UP:
-			# Traveling up: matching connects down, new_open up
-			if tile.top_val == new_open_val:
-				rot = 0.0 # top is up
-			else:
-				rot = PI # bottom is up
-		elif left_dir == Vector2.DOWN:
-			# Traveling down: matching connects up, new_open down
-			if tile.top_val == new_open_val:
-				rot = PI
-			else:
-				rot = 0.0
+		var dir: Vector2 = left_dir
+		var anchor: Vector2 = left_anchor_pos
 
-		left_anchor_pos = pos + left_dir * (TILE_LENGTH * 0.5 + SPACING)
+		# Check for snake turn if reaching left boundary
+		if anchor.x <= MIN_EXTENT_X and dir == Vector2.LEFT:
+			dir = Vector2.UP
+		elif anchor.y <= -200.0 and dir == Vector2.UP:
+			dir = Vector2.RIGHT
+		elif anchor.x >= MAX_EXTENT_X and dir == Vector2.RIGHT:
+			dir = Vector2.UP
 
-	open_left_val = new_open_val
-	return {"position": pos, "rotation": rot}
+		var pos: Vector2 = Vector2.ZERO
+		var rot: float = 0.0
+		var next_anchor: Vector2 = Vector2.ZERO
+
+		if is_dbl:
+			var center_offset: float = TILE_WIDTH * 0.5
+			pos = anchor + dir * center_offset
+			if dir.x != 0:
+				rot = 0.0 # Vertical crosswise
+			else:
+				rot = PI * 0.5 # Horizontal crosswise
+			next_anchor = pos + dir * (TILE_WIDTH * 0.5 + SPACING)
+		else:
+			var center_offset: float = TILE_LENGTH * 0.5
+			pos = anchor + dir * center_offset
+
+			if dir == Vector2.LEFT:
+				if tile.top_val == new_open_val:
+					rot = -PI * 0.5
+				else:
+					rot = PI * 0.5
+			elif dir == Vector2.RIGHT:
+				if tile.top_val == new_open_val:
+					rot = PI * 0.5
+				else:
+					rot = -PI * 0.5
+			elif dir == Vector2.UP:
+				if tile.top_val == new_open_val:
+					rot = 0.0
+				else:
+					rot = PI
+			elif dir == Vector2.DOWN:
+				if tile.top_val == new_open_val:
+					rot = PI
+				else:
+					rot = 0.0
+
+			next_anchor = pos + dir * (TILE_LENGTH * 0.5 + SPACING)
+
+		return {
+			"position": pos,
+			"rotation": rot,
+			"end": "left",
+			"dir": dir,
+			"new_open_val": new_open_val,
+			"next_anchor": next_anchor
+		}
+	elif end_choice == "right":
+		var is_dbl: bool = tile.is_double()
+		var matching_val: int = open_right_val
+		var new_open_val: int = tile.get_other_val(matching_val)
+
+		var dir: Vector2 = right_dir
+		var anchor: Vector2 = right_anchor_pos
+
+		# Check for snake turn if reaching right boundary
+		if anchor.x >= MAX_EXTENT_X and dir == Vector2.RIGHT:
+			dir = Vector2.DOWN
+		elif anchor.y >= 200.0 and dir == Vector2.DOWN:
+			dir = Vector2.LEFT
+		elif anchor.x <= MIN_EXTENT_X and dir == Vector2.LEFT:
+			dir = Vector2.DOWN
+
+		var pos: Vector2 = Vector2.ZERO
+		var rot: float = 0.0
+		var next_anchor: Vector2 = Vector2.ZERO
+
+		if is_dbl:
+			var center_offset: float = TILE_WIDTH * 0.5
+			pos = anchor + dir * center_offset
+			if dir.x != 0:
+				rot = 0.0 # Vertical crosswise
+			else:
+				rot = PI * 0.5 # Horizontal crosswise
+			next_anchor = pos + dir * (TILE_WIDTH * 0.5 + SPACING)
+		else:
+			var center_offset: float = TILE_LENGTH * 0.5
+			pos = anchor + dir * center_offset
+
+			if dir == Vector2.RIGHT:
+				if tile.top_val == matching_val:
+					rot = -PI * 0.5
+				else:
+					rot = PI * 0.5
+			elif dir == Vector2.LEFT:
+				if tile.top_val == matching_val:
+					rot = PI * 0.5
+				else:
+					rot = -PI * 0.5
+			elif dir == Vector2.DOWN:
+				if tile.top_val == matching_val:
+					rot = 0.0
+				else:
+					rot = PI
+			elif dir == Vector2.UP:
+				if tile.top_val == matching_val:
+					rot = PI
+				else:
+					rot = 0.0
+
+			next_anchor = pos + dir * (TILE_LENGTH * 0.5 + SPACING)
+
+		return {
+			"position": pos,
+			"rotation": rot,
+			"end": "right",
+			"dir": dir,
+			"new_open_val": new_open_val,
+			"next_anchor": next_anchor
+		}
+
+	return {"position": Vector2.ZERO, "rotation": 0.0, "end": end_choice}
+
+func _place_left_tile(tile: DominoTile) -> Dictionary:
+	var preview: Dictionary = get_placement_preview(tile, "left")
+	open_left_val = preview["new_open_val"]
+	left_anchor_pos = preview["next_anchor"]
+	left_dir = preview["dir"]
+	return {"position": preview["position"], "rotation": preview["rotation"], "end": "left"}
 
 func _place_right_tile(tile: DominoTile) -> Dictionary:
-	var is_dbl: bool = tile.is_double()
-	var matching_val: int = open_right_val
-	var new_open_val: int = tile.get_other_val(matching_val)
-
-	# Check for snake turn if reaching right boundary
-	if right_anchor_pos.x >= MAX_EXTENT_X and right_dir == Vector2.RIGHT:
-		right_dir = Vector2.DOWN
-	elif right_anchor_pos.y >= 200.0 and right_dir == Vector2.DOWN:
-		right_dir = Vector2.LEFT
-	elif right_anchor_pos.x <= MIN_EXTENT_X and right_dir == Vector2.LEFT:
-		right_dir = Vector2.DOWN
-
-	var pos: Vector2 = Vector2.ZERO
-	var rot: float = 0.0
-
-	if is_dbl:
-		# Double crosswise
-		var center_offset: float = TILE_WIDTH * 0.5
-		pos = right_anchor_pos + right_dir * center_offset
-		if right_dir.x != 0:
-			rot = 0.0 # Vertical crosswise
-		else:
-			rot = PI * 0.5 # Horizontal crosswise
-		right_anchor_pos = pos + right_dir * (TILE_WIDTH * 0.5 + SPACING)
-	else:
-		# Lengthwise
-		var center_offset: float = TILE_LENGTH * 0.5
-		pos = right_anchor_pos + right_dir * center_offset
-
-		if right_dir == Vector2.RIGHT:
-			# Traveling right: matching value connects on left, new_open_val on right
-			if tile.top_val == matching_val:
-				rot = -PI * 0.5 # top (matching) on left, bottom (new_open) on right
-			else:
-				rot = PI * 0.5 # top (new_open) on right, bottom (matching) on left
-		elif right_dir == Vector2.LEFT:
-			# Traveling left
-			if tile.top_val == matching_val:
-				rot = PI * 0.5
-			else:
-				rot = -PI * 0.5
-		elif right_dir == Vector2.DOWN:
-			# Traveling down: matching connects up, new_open down
-			if tile.top_val == matching_val:
-				rot = 0.0 # top connects up, bottom is down
-			else:
-				rot = PI
-		elif right_dir == Vector2.UP:
-			if tile.top_val == matching_val:
-				rot = PI
-			else:
-				rot = 0.0
-
-		right_anchor_pos = pos + right_dir * (TILE_LENGTH * 0.5 + SPACING)
-
-	open_right_val = new_open_val
-	return {"position": pos, "rotation": rot}
+	var preview: Dictionary = get_placement_preview(tile, "right")
+	open_right_val = preview["new_open_val"]
+	right_anchor_pos = preview["next_anchor"]
+	right_dir = preview["dir"]
+	return {"position": preview["position"], "rotation": preview["rotation"], "end": "right"}
 
 func _update_bounds(new_tile_pos: Vector2) -> void:
 	var tile_rect := Rect2(new_tile_pos - Vector2(60, 60), Vector2(120, 120))

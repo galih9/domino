@@ -31,12 +31,14 @@ var is_instant_mode: bool = false # Enables instant execution for automated test
 var boneyard: Array[DominoTile] = []
 var all_tiles: Array[DominoTile] = []
 
+# Preloaded scenes and classes
+const TileScene = preload("res://scenes/domino_tile.tscn")
+const DominoPlacementSlotClass = preload("res://scripts/DominoPlacementSlot.gd")
+
 var selected_hand_tile: DominoTile = null
+var _active_placement_slots: Array[Node2D] = []
 var is_animating: bool = false
 var match_over: bool = false
-
-# Preloaded scenes
-const TileScene = preload("res://scenes/domino_tile.tscn")
 
 # Node references
 @onready var board: SebastopolBoard = $BoardContainer/DominoBoard
@@ -208,7 +210,19 @@ func _init_styles() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_RIGHT or event.button_index == MOUSE_BUTTON_MIDDLE:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			# Check if user clicked on any active placement slot on the board
+			for slot in _active_placement_slots:
+				if is_instance_valid(slot) and slot.is_event_inside(event):
+					slot.handle_click()
+					get_viewport().set_input_as_handled()
+					return
+
+			# If user clicked empty table/board while placement slots are open, cancel selection
+			if selected_hand_tile != null and _active_placement_slots.size() > 0:
+				_on_cancel_prompt_clicked()
+				return
+		elif event.button_index == MOUSE_BUTTON_RIGHT or event.button_index == MOUSE_BUTTON_MIDDLE:
 			if event.pressed:
 				_is_panning = true
 				_pan_start_mouse = event.position
@@ -266,9 +280,17 @@ func _setup_ui_signals() -> void:
 	toast_panel.visible = false
 
 func _on_cancel_prompt_clicked() -> void:
+	if selected_hand_tile != null:
+		selected_hand_tile.set_selected(false)
+	_clear_placement_slots()
 	placement_prompt.visible = false
 	selected_hand_tile = null
-	turn_label.text = "Your Turn"
+	if board.is_empty():
+		turn_label.text = "Play [6-6]"
+	elif not board.is_star_complete:
+		turn_label.text = "Fill Star (Play a 6)"
+	else:
+		turn_label.text = "Your Turn"
 
 func _on_menu_clicked() -> void:
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
@@ -382,6 +404,7 @@ func start_new_match() -> void:
 func start_new_round() -> void:
 	game_over_panel.hide()
 	placement_prompt.hide()
+	_clear_placement_slots()
 	pass_btn.hide()
 	consecutive_passes = 0
 	selected_hand_tile = null
@@ -568,6 +591,7 @@ func start_playing_turn() -> void:
 	current_state = State.PLAYING
 	is_animating = false
 	placement_prompt.hide()
+	_clear_placement_slots()
 	selected_hand_tile = null
 
 	var current_player: Player = players[current_player_idx]
@@ -609,6 +633,23 @@ func _on_tile_clicked(tile: DominoTile) -> void:
 	if tile.owner_id != 0 or not tile.is_playable:
 		return
 
+	# If the user clicks the currently selected tile again, deselect it!
+	if selected_hand_tile == tile:
+		_clear_placement_slots()
+		tile.set_selected(false)
+		selected_hand_tile = null
+		if board.is_empty():
+			turn_label.text = "Play [6-6]"
+		elif not board.is_star_complete:
+			turn_label.text = "Fill Star (Play a 6)"
+		else:
+			turn_label.text = "Your Turn"
+		return
+
+	if selected_hand_tile != null:
+		selected_hand_tile.set_selected(false)
+	_clear_placement_slots()
+
 	SoundManager.play_click()
 	selected_hand_tile = tile
 
@@ -621,7 +662,9 @@ func _on_tile_clicked(tile: DominoTile) -> void:
 	if valid_ends.size() == 1:
 		_commit_player_move(valid_ends[0])
 	elif valid_ends.size() > 1:
+		tile.set_selected(true)
 		_show_placement_prompt(tile, valid_ends)
+		_show_placement_slots(tile, valid_ends)
 
 func _show_placement_prompt(tile: DominoTile, valid_ends: Array[String]) -> void:
 	btn_play_north.visible = valid_ends.has("north")
@@ -630,23 +673,50 @@ func _show_placement_prompt(tile: DominoTile, valid_ends: Array[String]) -> void
 	btn_play_west.visible = valid_ends.has("west")
 
 	if btn_play_north.visible:
-		btn_play_north.text = "↑ North | %d" % board.get_open_val("north")
+		btn_play_north.text = "North | %d" % board.get_open_val("north")
 	if btn_play_south.visible:
-		btn_play_south.text = "↓ South | %d" % board.get_open_val("south")
+		btn_play_south.text = "South | %d" % board.get_open_val("south")
 	if btn_play_east.visible:
-		btn_play_east.text = "→ East | %d" % board.get_open_val("east")
+		btn_play_east.text = "East | %d" % board.get_open_val("east")
 	if btn_play_west.visible:
-		btn_play_west.text = "← West | %d" % board.get_open_val("west")
+		btn_play_west.text = "West | %d" % board.get_open_val("west")
 
-	placement_prompt.visible = true
+	# Hide the text buttons prompt panel; the player now clicks glowing slots on the board
+	placement_prompt.visible = false
 	turn_label.text = "Choose Arm"
+
+func _show_placement_slots(tile: DominoTile, valid_ends: Array[String]) -> void:
+	_clear_placement_slots()
+	turn_label.text = "Choose Arm"
+
+	for arm in valid_ends:
+		var preview: Dictionary = board.get_placement_preview(tile, arm)
+		var slot: Node2D = DominoPlacementSlotClass.new()
+		slot.choice = arm
+		slot.slot_label = arm.capitalize()
+		slot.open_val = board.get_open_val(arm)
+		slot.position = preview["position"]
+		slot.rotation = preview["rotation"]
+		slot.slot_clicked.connect(func(chosen_arm: String):
+			_commit_player_move(chosen_arm)
+		)
+		board.add_child(slot)
+		_active_placement_slots.append(slot)
+
+func _clear_placement_slots() -> void:
+	for slot in _active_placement_slots:
+		if is_instance_valid(slot):
+			slot.queue_free()
+	_active_placement_slots.clear()
 
 func _commit_player_move(arm_choice: String) -> void:
 	if selected_hand_tile == null:
 		return
+	_clear_placement_slots()
 	placement_prompt.visible = false
 	consecutive_passes = 0
 	var tile: DominoTile = selected_hand_tile
+	tile.set_selected(false)
 	selected_hand_tile = null
 
 	players[0].remove_tile(tile)

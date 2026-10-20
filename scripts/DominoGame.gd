@@ -22,11 +22,13 @@ var consecutive_passes: int = 0
 var boneyard: Array[DominoTile] = []
 var all_tiles: Array[DominoTile] = []
 
-var selected_hand_tile: DominoTile = null
-var is_animating: bool = false
-
-# Preloaded scenes
+# Preloaded scenes and classes
 const TileScene = preload("res://scenes/domino_tile.tscn")
+const DominoPlacementSlotClass = preload("res://scripts/DominoPlacementSlot.gd")
+
+var selected_hand_tile: DominoTile = null
+var _active_placement_slots: Array[Node2D] = []
+var is_animating: bool = false
 
 # Node references
 @onready var board: DominoBoard = $BoardContainer/DominoBoard
@@ -147,7 +149,19 @@ func _init_badge_styles() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_RIGHT or event.button_index == MOUSE_BUTTON_MIDDLE:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			# Check if user clicked on any active placement slot on the board
+			for slot in _active_placement_slots:
+				if is_instance_valid(slot) and slot.is_event_inside(event):
+					slot.handle_click()
+					get_viewport().set_input_as_handled()
+					return
+
+			# If user clicked empty table/board while placement slots are open, cancel selection
+			if selected_hand_tile != null and _active_placement_slots.size() > 0:
+				_on_cancel_prompt_clicked()
+				return
+		elif event.button_index == MOUSE_BUTTON_RIGHT or event.button_index == MOUSE_BUTTON_MIDDLE:
 			if event.pressed:
 				_is_panning = true
 				_pan_start_mouse = event.position
@@ -189,6 +203,9 @@ func _setup_ui_signals() -> void:
 	toast_panel.visible = false
 
 func _on_cancel_prompt_clicked() -> void:
+	if selected_hand_tile != null:
+		selected_hand_tile.set_selected(false)
+	_clear_placement_slots()
 	placement_prompt.visible = false
 	selected_hand_tile = null
 	turn_label.text = "Your Turn"
@@ -216,6 +233,7 @@ func start_new_match() -> void:
 	opponent_dialog.hide()
 	game_over_panel.hide()
 	placement_prompt.hide()
+	_clear_placement_slots()
 
 	# Clear previous match tiles and board
 	_clear_all_tiles()
@@ -396,6 +414,7 @@ func start_playing_turn() -> void:
 	current_state = State.PLAYING
 	is_animating = false
 	placement_prompt.hide()
+	_clear_placement_slots()
 	selected_hand_tile = null
 
 	var current_player: Player = players[current_player_idx]
@@ -457,6 +476,18 @@ func _on_tile_clicked(tile: DominoTile) -> void:
 	if tile.owner_id != 0 or not tile.is_playable:
 		return
 
+	# If the user clicks the currently selected tile again, deselect it!
+	if selected_hand_tile == tile:
+		_clear_placement_slots()
+		tile.set_selected(false)
+		selected_hand_tile = null
+		turn_label.text = "Your Turn"
+		return
+
+	if selected_hand_tile != null:
+		selected_hand_tile.set_selected(false)
+	_clear_placement_slots()
+
 	SoundManager.play_click()
 	selected_hand_tile = tile
 
@@ -468,17 +499,45 @@ func _on_tile_clicked(tile: DominoTile) -> void:
 	if valid_ends.size() == 1:
 		_commit_player_move(valid_ends[0])
 	elif valid_ends.size() > 1:
-		btn_play_left.text = "Left  |  %d" % board.open_left_val
-		btn_play_right.text = "Right  |  %d" % board.open_right_val
-		placement_prompt.visible = true
-		turn_label.text = "Choose End"
+		tile.set_selected(true)
+		_show_placement_slots(tile, valid_ends)
+
+func _show_placement_slots(tile: DominoTile, valid_ends: Array[String]) -> void:
+	_clear_placement_slots()
+	turn_label.text = "Choose End"
+	placement_prompt.visible = false
+
+	btn_play_left.text = "Left | %d" % board.open_left_val
+	btn_play_right.text = "Right | %d" % board.open_right_val
+
+	for end_choice in valid_ends:
+		var preview: Dictionary = board.get_placement_preview(tile, end_choice)
+		var slot: Node2D = DominoPlacementSlotClass.new()
+		slot.choice = end_choice
+		slot.slot_label = end_choice.capitalize()
+		slot.open_val = board.get_open_val(end_choice)
+		slot.position = preview["position"]
+		slot.rotation = preview["rotation"]
+		slot.slot_clicked.connect(func(chosen_end: String):
+			_commit_player_move(chosen_end)
+		)
+		board.add_child(slot)
+		_active_placement_slots.append(slot)
+
+func _clear_placement_slots() -> void:
+	for slot in _active_placement_slots:
+		if is_instance_valid(slot):
+			slot.queue_free()
+	_active_placement_slots.clear()
 
 func _commit_player_move(end_choice: String) -> void:
 	if selected_hand_tile == null:
 		return
+	_clear_placement_slots()
 	placement_prompt.visible = false
 	consecutive_passes = 0
 	var tile: DominoTile = selected_hand_tile
+	tile.set_selected(false)
 	selected_hand_tile = null
 
 	players[0].remove_tile(tile)

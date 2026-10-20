@@ -8,9 +8,65 @@ const TileScene = preload("res://scenes/domino_tile.tscn")
 func _initialize() -> void:
 	print("--- BEGINNING SEBASTOPOL DOMINO TESTS ---")
 	await test_sebastopol_board_rules()
+	await test_placement_slots_interaction()
 	await test_sebastopol_game_scene()
 	print("--- ALL SEBASTOPOL DOMINO TESTS PASSED ---")
 	quit(0)
+
+func test_placement_slots_interaction() -> void:
+	print("[TEST] Testing glowing placement slots interaction on board...")
+	var board := SebastopolBoard.new()
+	root.add_child(board)
+	await process_frame
+
+	var tile_6_6: DominoTile = TileScene.instantiate()
+	tile_6_6.setup(6, 6, true)
+	var tile_6_5: DominoTile = TileScene.instantiate()
+	tile_6_5.setup(6, 5, true)
+	var tile_6_4: DominoTile = TileScene.instantiate()
+	tile_6_4.setup(6, 4, true)
+
+	# 1. Preview center
+	var prev_center: Dictionary = board.get_placement_preview(tile_6_6, "center")
+	assert(prev_center["position"] == Vector2.ZERO, "Center preview pos must be Vector2.ZERO")
+	assert(prev_center["rotation"] == 0.0, "Center preview rot must be 0")
+	board.place_tile(tile_6_6, "center")
+
+	# 2. Preview arms
+	for arm in ["north", "south", "east", "west"]:
+		var prev_arm: Dictionary = board.get_placement_preview(tile_6_5, arm)
+		assert(prev_arm.has("position"), "Preview must include position")
+		assert(prev_arm.has("rotation"), "Preview must include rotation")
+		assert(prev_arm["arm"] == arm, "Preview arm must match")
+
+	# 3. Compare preview to actual placement
+	var prev_north: Dictionary = board.get_placement_preview(tile_6_5, "north")
+	var placed_north: Dictionary = board.place_tile(tile_6_5, "north")
+	assert(prev_north["position"] == placed_north["position"], "Preview position must match placed position")
+	assert(prev_north["rotation"] == placed_north["rotation"], "Preview rotation must match placed rotation")
+
+	# 4. DominoPlacementSlot component tests
+	var slot := DominoPlacementSlot.new()
+	slot.choice = "west"
+	slot.slot_label = "West"
+	slot.open_val = 6
+	slot.position = Vector2(-100, 0)
+	board.add_child(slot)
+	await process_frame
+
+	assert(slot.choice == "west", "Slot choice")
+	assert(slot.slot_label == "West", "Slot label")
+	assert(slot.open_val == 6, "Slot open val")
+
+	var clicked_choice: Array[String] = []
+	slot.slot_clicked.connect(func(c: String): clicked_choice.append(c))
+	slot._on_clicked()
+	await create_timer(0.18).timeout
+	assert(clicked_choice == ["west"], "Slot click should emit choice 'west'")
+
+	board.queue_free()
+	await process_frame
+	print("[PASS] Placement preview and DominoPlacementSlot tests passed!")
 
 func test_sebastopol_board_rules() -> void:
 	print("[TEST] Testing SebastopolBoard core rules & 4-way star mechanics...")
@@ -216,6 +272,32 @@ func test_sebastopol_game_scene() -> void:
 	assert(game.match_target == 150, "Match target updated to 150")
 	game.close_setup_modal()
 	assert(game.setup_modal.visible == false, "Setup modal should close")
+
+	# 8. Test glowing placement slots on board when player has multiple paths
+	game.current_state = SebastopolGame.State.PLAYING
+	game.current_player_idx = 0
+	var test_hand_tile: DominoTile = TileScene.instantiate()
+	test_hand_tile.setup(6, 4, true, 0)
+	game.tile_layer.add_child(test_hand_tile)
+	game.players[0].add_tile(test_hand_tile)
+	test_hand_tile.set_playable(true)
+
+	# Trigger tile click with multiple valid paths
+	game._show_placement_slots(test_hand_tile, ["north", "south", "west"])
+	assert(game._active_placement_slots.size() == 3, "Must spawn 3 glowing placement slots on board")
+	assert(game.placement_prompt.visible == false, "Prompt panel with text buttons must remain hidden")
+
+	for s in game._active_placement_slots:
+		assert(s.get_parent() == game.board, "Glowing slot must be child of board")
+
+	# Test clicking one of the slots to commit move
+	game.selected_hand_tile = test_hand_tile
+	var target_slot: Node2D = game._active_placement_slots[0]
+	var chosen_choice: String = target_slot.choice
+	game._commit_player_move(chosen_choice)
+	assert(game._active_placement_slots.size() == 0, "Slots must be cleared after move committed")
+	assert(game.placement_prompt.visible == false, "Prompt panel must remain hidden")
+	await create_timer(0.45).timeout
 
 	game.queue_free()
 	await process_frame
